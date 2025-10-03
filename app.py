@@ -1555,141 +1555,67 @@ def eliminar_medicamento(med_id):
 # --- CHATBOT ---
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_msg = request.json.get("message", "").lower()
-    user_msg_clean = re.sub(r'[^\w\sáéíóúüñ]', '', user_msg)
+    try:
+        data = request.get_json(silent=True)
+        user_msg = (data.get("message", "") if data else "").lower()
+        user_msg_clean = re.sub(r'[^\w\sáéíóúüñ]', '', user_msg)
 
-    saludo_regex = r"h+o+l+a+|b+u+e+n+o*s* *d+í*a+s*|h+e+y+|q+u+é+ *t+a+l+"
-    despedidas = ["adiós", "chao", "hasta luego", "nos vemos", "me voy", "bye"]
-    malas_palabras = ["idiota", "imbécil", "estúpido", "mierda", "puta",
-                      "malparido", "gonorrea", "fuck", "tonto", "pendejo", "culero"]
+        saludo_regex = r"h+o+l+a+|b+u+e+n+o*s* *d+í*a+s*|h+e+y+|q+u+é+ *t+a+l+"
+        despedidas = ["adiós", "chao", "hasta luego", "nos vemos", "me voy", "bye"]
+        malas_palabras = ["idiota", "imbécil", "estúpido", "mierda", "puta",
+                          "malparido", "gonorrea", "fuck", "tonto", "pendejo", "culero"]
 
-    emociones = {
-        "triste": "Lamento que te sientas así. ¿Quieres hablar de eso o necesitas apoyo emocional?",
-        "deprimido": "Estás pasando por un momento difícil. Habla con alguien de confianza o considera ayuda psicológica.",
-        "ansioso": "Respira profundamente. Estás a salvo. ¿Quieres que te sugiera ejercicios de relajación?",
-        "feliz": "¡Qué bueno! Me alegra saberlo. ¿Hay algo que quieras compartir?",
-        "estresado": "Es importante tomar pausas. ¿Te gustaría recibir tips para reducir el estrés?",
-        "solo": "No estás solo. Estoy aquí contigo, y puedes contarme lo que sientes.",
-        "abrumado": "Tómate un momento para ti. Vamos paso a paso. ¿En qué puedo ayudarte?",
-        "enojado": "Entiendo que estés molesto. Puedes hablar de ello o simplemente desahogarte aquí."
-    }
+        emociones = {
+            "triste": "Lamento que te sientas así. ¿Quieres hablar de eso o necesitas apoyo emocional?",
+            "deprimido": "Estás pasando por un momento difícil. Habla con alguien de confianza o considera ayuda psicológica.",
+            "ansioso": "Respira profundamente. Estás a salvo. ¿Quieres que te sugiera ejercicios de relajación?",
+            "feliz": "¡Qué bueno! Me alegra saberlo. ¿Hay algo que quieras compartir?",
+            "estresado": "Es importante tomar pausas. ¿Te gustaría recibir tips para reducir el estrés?",
+            "solo": "No estás solo. Estoy aquí contigo, y puedes contarme lo que sientes.",
+            "abrumado": "Tómate un momento para ti. Vamos paso a paso. ¿En qué puedo ayudarte?",
+            "enojado": "Entiendo que estés molesto. Puedes hablar de ello o simplemente desahogarte aquí."
+        }
 
-    enfermedades = {
-        "cabeza": "Podrías tomar paracetamol y descansar. Si persiste, consulta a un médico.",
-        "fiebre": "Bebe líquidos, descansa y toma acetaminofén. Consulta si supera los 39°C.",
-        "tos": "Hidrátate, evita el frío. Si es persistente, podría ser COVID u otra infección.",
-        "gripa": "Descansa, toma líquidos y mantente abrigado.",
-        "diarrea": "Hidrátate con suero oral. Consulta si persiste más de 2 días.",
-        "náuseas": "Toma líquidos claros, evita alimentos pesados.",
-        "mareo": "Puede deberse a estrés o baja presión. Reposa y evalúa.",
-        "dolor abdominal": "Podría ser indigestión, gastritis u otros. Evita comidas pesadas.",
-        "vómito": "Hidrátate con sorbos pequeños. Si hay sangre o persiste, consulta.",
-        "asma": "Usa tu inhalador. Si no mejora, busca atención médica urgente.",
-        "covid": "Si tienes fiebre, tos seca y fatiga, aíslate y hazte una prueba."
-    }
+        enfermedades = {
+            "cabeza": "Podrías tomar paracetamol y descansar. Si persiste, consulta a un médico.",
+            "fiebre": "Bebe líquidos, descansa y toma acetaminofén. Consulta si supera los 39°C.",
+            "tos": "Hidrátate, evita el frío. Si es persistente, podría ser COVID u otra infección.",
+            "gripa": "Descansa, toma líquidos y mantente abrigado.",
+            "diarrea": "Hidrátate con suero oral. Consulta si persiste más de 2 días.",
+            "náuseas": "Toma líquidos claros, evita alimentos pesados.",
+            "mareo": "Puede deberse a estrés o baja presión. Reposa y evalúa.",
+            "dolor abdominal": "Podría ser indigestión, gastritis u otros. Evita comidas pesadas.",
+            "vómito": "Hidrátate con sorbos pequeños. Si hay sangre o persiste, consulta.",
+            "asma": "Usa tu inhalador. Si no mejora, busca atención médica urgente.",
+            "covid": "Si tienes fiebre, tos seca y fatiga, aíslate y hazte una prueba."
+        }
 
-
-    # --- Bienvenida con menú ---
-    if re.search(saludo_regex, user_msg_clean) or user_msg_clean.strip() in ["menu", "ayuda", "inicio"]:
-        reply = """
-👋 ¡Hola, bienvenido a <b>Asistencia Médica J.A</b>!<br><br>
-Antes de empezar recuerda:<br>
-🔹 Si ya tienes cuenta → <a href="/sesion">Iniciar sesión</a><br>
-🔹 Si no tienes cuenta → <a href="/register">Registrarse</a><br><br>
-<b>Puedo ayudarte con las siguientes acciones:</b><br>
-- 🗓️ <a href="/agendar_cita">Agendar una cita</a><br>
-- 📑 <a href="/historial_citas">Ver historial de citas</a><br>
-- 👤 <a href="/perfil">Ver perfil</a><br>
-- 📂 <a href="/documento_medico">Ver documentos médicos</a><br>
-- 💊 <a href="/recordatorio">Recordatorios de medicación</a><br>
-- ❤️ <a href="/rcp">Información de RCP</a><br>
-- 💡 <a href="/consejos_salud">Consejos de salud</a><br>
-Escríbeme lo que necesites y te guiaré paso a paso.
-"""
-    elif any(p in user_msg for p in malas_palabras):
-        reply = "🚫 <b>Por favor, mantén el respeto.</b>"
-    elif any(d in user_msg for d in despedidas):
-        reply = "👋 Cuídate mucho. ¡Hasta pronto!"
-    elif "me pegaron" in user_msg or "me hicieron daño" in user_msg:
-        reply = "⚠️ Lamento escuchar eso. Si estás en peligro busca ayuda urgente o llama a emergencias."
-    elif "no quiero vivir" in user_msg or "quiero morir" in user_msg:
-        reply = "💔 Siento que te sientas así. Habla con alguien de confianza o llama a una línea de ayuda de tu país."
-    elif any(emo in user_msg for emo in emociones.keys()):
-        reply = next(res for emo, res in emociones.items() if emo in user_msg)
-    elif any(enf in user_msg for enf in enfermedades.keys()):
-        reply = next(res for enf, res in enfermedades.items() if enf in user_msg)
-
-
-    # --- Acciones con explicación ---
-    elif "agendar" in user_msg and "cita" in user_msg:
-        reply = """
-✅ <b>Agendar una cita:</b><br>
-1️⃣ Ingresa aquí → <a href="/citas">Agendar Cita</a><br>
-2️⃣ Inicia sesión en tu cuenta (si no la tienes, regístrate).<br>
-3️⃣ Completa el formulario con los datos solicitados.<br>
-4️⃣ Revisa el estado en <a href="/historial_citas">Historial de Citas</a>.<br>
-"""
-    elif "historial" in user_msg or "citas" in user_msg:
-        reply = """
-📑 <b>Historial de Citas:</b><br>
-Accede aquí → <a href="/historial_citas">Ver historial de citas</a><br>
-Podrás ver tus citas confirmadas, canceladas o pendientes.<br>
-"""
-    elif "perfil" in user_msg:
-        reply = """
-👤 <b>Perfil de usuario:</b><br>
-Accede aquí → <a href="/perfil">Ver perfil</a><br>
-Desde tu perfil puedes actualizar tu información personal.<br>
-"""
-    elif "documento" in user_msg or "médico" in user_msg:
-        reply = """
-📂 <b>Documentos médicos:</b><br>
-Accede aquí → <a href="/documento_medico">Ver documentos</a><br>
-Encontrarás tus resultados, órdenes y archivos médicos.<br>
-"""
-    elif "medicación" in user_msg or "recordar" in user_msg:
-        reply = """
-💊 <b>Recordatorios de medicación:</b><br>
-Accede aquí → <a href="/recordatorio">Recordatorio</a><br>
-Puedes configurar aquí tus recordatorios de medicación.<br>
-"""
-    elif "rcp" in user_msg or "primeros auxilios" in user_msg:
-        reply = """
-❤️ <b>Información de RCP:</b><br>
-Accede aquí → <a href="/rcp">rcp</a><br>
-Puedes informarte aquí y salvar una vida.<br>
-1️⃣ Comprueba si la persona responde y respira.<br>
-2️⃣ Llama a emergencias.<br>
-3️⃣ Si no respira, inicia compresiones torácicas (100-120/minuto).<br>
-⚠️ Consulta la guía oficial o recibe capacitación en primeros auxilios.<br>
-"""
-    elif "consejo" in user_msg or "salud" in user_msg:
-        reply = """
-💡 <b>Consejos de salud:</b><br>
-Accede aquí → <a href="consejos_salud">consejos de salud</a><br>
-Encontraras aquí información muy útil.<br>
-- Hidrátate 💧<br>
-- Duerme 7-8 horas 😴<br>
-- Haz ejercicio regularmente 🏃<br>
-- Consume frutas y verduras 🍎🥦<br>
-- Tómate pausas y gestiona el estrés 🌿<br>
-"""
-  
-    elif "iniciar sesión" in user_msg or "login" in user_msg:
-        reply = "🔑 Accede a tu cuenta aquí → <a href='/sesion'>Iniciar sesión</a>"
-    elif "registrar" in user_msg or "crear cuenta" in user_msg:
-        reply = "📝 Crea tu cuenta aquí → <a href='/register'>Registrarse</a>"
-    else:
+        # --- Lógica principal ---
         reply = "🤔 No entendí bien. Escribe <b>'menu'</b> para ver todas las opciones disponibles."
 
-    return jsonify({"reply": reply})
+        if re.search(saludo_regex, user_msg_clean) or user_msg_clean.strip() in ["menu", "ayuda", "inicio"]:
+            reply = "👋 ¡Hola! Bienvenido a Asistencia Médica J.A. Escribe 'menu' para ver opciones."
+        elif any(p in user_msg for p in malas_palabras):
+            reply = "🚫 <b>Por favor, mantén el respeto.</b>"
+        elif any(d in user_msg for d in despedidas):
+            reply = "👋 Cuídate mucho. ¡Hasta pronto!"
+        elif "me pegaron" in user_msg or "me hicieron daño" in user_msg:
+            reply = "⚠️ Lamento escuchar eso. Si estás en peligro busca ayuda urgente o llama a emergencias."
+        elif "no quiero vivir" in user_msg or "quiero morir" in user_msg:
+            reply = "💔 Siento que te sientas así. Habla con alguien de confianza o llama a una línea de ayuda de tu país."
+        else:
+            for emo, res in emociones.items():
+                if emo in user_msg:
+                    reply = res
+                    break
+            for enf, res in enfermedades.items():
+                if enf in user_msg:
+                    reply = res
+                    break
 
+        return jsonify({"reply": reply})
+    
+    except Exception as e:
+        print("Error en /chat:", e)
+        return jsonify({"reply": "🤔 Ocurrió un error. Intenta de nuevo."}), 500
 
-# Arranque de la app (modo debug para desarrollo)
-if __name__ == "__main__":
-    import os
-    app.run(
-        host="0.0.0.0",
-        port=int(os.getenv("PORT", 5000)),
-        debug=os.getenv("FLASK_ENV") != "production"
-    )
