@@ -10,7 +10,7 @@ import pymysql.cursors
 from flask_apscheduler import APScheduler   # 🔹 Para programar tareas automáticas
 import smtplib                              # 🔹 Para enviar correos
 from email.mime.text import MIMEText        # 🔹 Formato del correo
-
+from dotenv import load_dotenv
 
 # Inicializa la aplicación de Flask
 app = Flask(__name__)
@@ -29,13 +29,15 @@ def allowed_file(filename):
 
 
 # --- CONFIGURACIÓN DE LA BASE DE DATOS ---
+load_dotenv()
+
 def get_connection():
     return pymysql.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="asistenciamedica",
-        port=3308, 
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        port=int(os.getenv("DB_PORT")),
         cursorclass=pymysql.cursors.DictCursor
     )
 
