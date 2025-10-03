@@ -1210,27 +1210,22 @@
   });
 
   // Mantener tu función sendMessage intacta
- chatButton.addEventListener('click', async () => {
-  chatContainer.style.display = 'block';
-  chatButton.style.display = 'none';
+  async function sendMessage() {
+    const input = document.getElementById('userInput');
+    const chat = document.getElementById('chat');
+    const userText = input.value;
+  const res = await fetch('https://medica-gfya.onrender.com/chat', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({ message: userText })
+});
 
-  const chat = document.getElementById('chat');
-
-  // Evitar enviar mensaje si ya se mostró la bienvenida
-  if (!chat.dataset.welcomeShown) {
-    const res = await fetch('https://medica-gfya.onrender.com/chat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ message: "inicio" }) // mensaje “inicio” para que el backend responda la bienvenida
-    });
 
     const data = await res.json();
     chat.innerHTML += '<p><strong>Bot:</strong> ' + data.reply + '</p>';
+    input.value = '';
     chat.scrollTop = chat.scrollHeight;
-
-    chat.dataset.welcomeShown = "true"; // marca que ya se mostró
   }
-});
 
  const userInput = document.getElementById('userInput');
   
