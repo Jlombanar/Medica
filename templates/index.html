@@ -1214,13 +1214,12 @@
     const input = document.getElementById('userInput');
     const chat = document.getElementById('chat');
     const userText = input.value;
-    if (userText.trim() === '') return;
-    chat.innerHTML += '<p><strong>Tú:</strong> ' + userText + '</p>';
-    const res = await fetch('http://127.0.0.1:5000/chat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({message: userText})
-    });
+  const res = await fetch('https://medica-gfya.onrender.com/chat', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({ message: userText })
+});
+
     const data = await res.json();
     chat.innerHTML += '<p><strong>Bot:</strong> ' + data.reply + '</p>';
     input.value = '';
