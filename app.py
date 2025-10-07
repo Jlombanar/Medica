@@ -1468,27 +1468,48 @@ def recordatorio():
 
 @app.route("/registrar_medicamento", methods=["POST"])
 def registrar_medicamento():
-    data = request.get_json()
-    user_id = session.get("usuario_id", 1)
-    now = datetime.now()
+    try:
+        # Leer los datos enviados por el frontend
+        data = request.get_json(force=True)
+        user_id = session.get("usuario_id", 1)
+        now = datetime.now()
 
-    connection = get_connection()
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            INSERT INTO medicamentos (usuario_id, nombre, dosis, frecuencia, fecha_inicio, fecha_fin, correo, ultimo_recordatorio)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (
-            user_id,
-            data["nombre"],
-            data["dosis"],
-            int(data["frecuencia"]),
-            data["fecha_inicio"],
-            data["fecha_fin"],
-            data["correo"],
-            now  # <-- Establecemos el primer recordatorio al registrar
-        ))
-        connection.commit()
-    connection.close()
+        # Insertar en base de datos
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO medicamentos (usuario_id, nombre, dosis, frecuencia, fecha_inicio, fecha_fin, correo, ultimo_recordatorio)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                user_id,
+                data["nombre"],
+                data["dosis"],
+                int(data["frecuencia"]),
+                data["fecha_inicio"],
+                data["fecha_fin"],
+                data["correo"],
+                now
+            ))
+            connection.commit()
+
+        # Cerrar conexión
+        connection.close()
+
+        # 🔹 Devuelve una respuesta JSON válida
+        return jsonify({
+            "success": True,
+            "message": "Medicamento registrado correctamente",
+            "data": data
+        }), 200
+
+    except Exception as e:
+        # Si ocurre un error, devuelve JSON también (no HTML)
+        print("❌ Error al registrar medicamento:", e)
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
 
     # Enviar primer recordatorio inmediatamente
     mensaje_recordatorio = f"""
