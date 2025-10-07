@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - {{ usuario.nombre }}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        /* --- Variables de Color y Estilos Base --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-dark: #343a40;
+            --text-light: #6c757d;
+            --card-bg: #ffffff;
+            --shadow: 0 8px 30px rgba(0,0,0,0.08);
+            --golden-line: #dfc974; /* Color dorado */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden; 
+        }
+
+        /* --- Contenedor Principal --- */
+        .profile-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative; /* Necesario para la línea */
+            overflow: hidden; /* Oculta la parte de la línea que se sale */
+        }
+        
+        /* Línea dorada en la parte superior */
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--golden-line); /* 🎉 Línea dorada */
+        }
+
+        /* --- Header y Avatar --- */
+        .profile-header {
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+        }
+        
+        /* --- Sección de Información --- */
+        .profile-info-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--light-bg);
+            border-radius: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .info-item:hover {
+            background: #e9ecef;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .info-content {
+            text-align: left;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        /* --- Botones de Acción --- */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            font-size: 15px;
+            border: 1px solid var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+        
+        /* Estilo para el botón secundario */
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light-bg);
+            color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 25px;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ usuario.nombre.split()[0][0] }}{{ usuario.nombre.split()[-1][0] }}
+            </div>
+            <h1 class="profile-name">{{ usuario.nombre }}</h1>
+        </div>
+
+        <div class="profile-info-grid">
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-id-card"></i></div>
+                <div class="info-content">
+                    <div class="info-label">Documento</div>
+                    <div class="info-value">{{ usuario.documento }}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="info-content">
+                    <div class="info-label">Correo Electrónico</div>
+                    <div class="info-value">{{ usuario.correo }}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-phone"></i></div>
+                <div class="info-content">
+                    <div class="info-label">Teléfono</div>
+                    <div class="info-value">{{ usuario.telefono }}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info-content">
+                    <div class="info-label">Dirección</div>
+                    <div class="info-value">{{ usuario.direccion }}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-city"></i></div>
+                <div class="info-content">
+                    <div class="info-label">Ciudad</div>
+                    <div class="info-value">{{ usuario.ciudad }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('editar_perfil') }}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Editar Perfil
+            </a>
+            <a href="{{ url_for('agendar_cita') }}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <script>
+            Swal.fire({
+              icon: "{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }}",
+              title: "{{ 'Éxito' if category == 'success' else 'Error' if category == 'error' else 'Aviso' }}",
+              text: "{{ message }}",
+              confirmButtonColor: "#007bff"
+            });
+          </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

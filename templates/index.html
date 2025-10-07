@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Asistencia Médica J.A</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+        background-color: #ffffff;
+        padding: 0px 0px;
+        border-bottom: 13px solid #dfc974;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px;
+    }
+
+    .logo-header {
+      height: 80px;
+      margin-right: 15px;
+    }
+    .encabezado-contenido {
+        height: 130px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 0;
+        flex-wrap: wrap;
+        background-image: url('{{ url_for("static", filename="tttt.png") }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        color: rgb(248, 248, 248);
+      }
+
+    .titulo-header {
+      color:rgb(248, 248, 248);
+      font-size: 32px;
+      margin: 0;
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* ********** CAMBIOS EN NAV PARA ALINEAR CORRECTAMENTE ********** */
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        margin: 7px;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .nav-links-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+  /* Oculto en pantallas grandes */
+.menu-toggle {
+    display: none;
+    z-index: 2000;
+}
+
+
+
+    /* ********** FIN DE CAMBIOS EN NAV ********** */
+
+    /* ESTILOS DE ENLACES CORREGIDOS: Menú de navegación */
+    nav a {
+      color: #054b88;
+      font-weight: bold;
+      text-decoration: none; /* Quitamos el subrayado */
+      font-size: 18px;
+      position: relative; /* Necesario para el efecto de subrayado al pasar el mouse */
+    }
+
+    nav a:hover {
+        color: #007bff; /* Cambiamos el color al pasar el mouse */
+    }
+    
+    /* Efecto de subrayado que no se ve feo */
+    nav a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #007bff;
+        transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+        width: 100%;
+    }
+
+
+   .banner {
+  width: 60%;
+  max-width: 1600px;
+  height: auto;
+  margin: 30px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media (max-width: 1200px) {
+  .banner {
+    width: 90%;   /* en pantallas medianas */
+    height: auto;
+  }
+}
+
+
+
+@media (max-width: 1700px) {
+  .banner {
+    width: 90%;
+    height: auto;
+  }
+}
+    .carousel-section-wrapper {
+      width: 60%;
+      height: 80px;
+      margin: 4px auto;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .carousel-background {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .carousel-background img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .text-carousel-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #ffffff;
+      font-size: 1.1em;
+      font-family: 'Arial', sans-serif;
+      font-style: italic;
+      transform: translateY(-3px);
+    }
+
+    .carousel-text-slide {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+
+    .carousel-text-slide.active {
+      opacity: 1;
+    }
+
+    .highlight-image {
+      width: 60%;
+      height: auto;
+      max-height: 80px;
+      margin: 20px auto 0px auto;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .highlight-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .info-section {
+      width: 60%;
+      margin: 0px auto 20px auto;
+      padding: 25px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(196, 36, 36, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .info-column {
+      flex: 2;
+      min-width: 0;
+      margin-right: 20px;
+      padding: 0;
+    }
+
+    .info-section h2 {
+      color: #054b88;
+    }
+
+    .info-column ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    /* ESTILOS DE ENLACES CORREGIDOS: Sección de RCP */
+    .info-column ul li {
+      position: relative;
+      padding-left: 25px;
+      margin-bottom: 8px;
+      font-size: 0.95em;
+    }
+    
+    .info-column ul li a {
+      color: #054b88; /* Color del texto del enlace */
+      text-decoration: none; /* Quitamos el subrayado */
+    }
+
+    .info-column ul li a:hover {
+        text-decoration: underline; /* Subrayado solo al pasar el mouse */
+        color: #007bff; /* Un color diferente al pasar el mouse */
+    }
+
+    .info-column ul li::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+      font-size: 1.1em;
+      line-height: 1;
+    }
+
+    .info-image-sidebar {
+      flex: 1;
+      max-width: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0px;
+      background-color: transparent;
+      overflow: visible;
+      box-shadow: none;
+      box-sizing: border-box;
+      position: relative;
+      top: auto;
+      align-self: auto;
+      margin-top: 0;
+      height: auto;
+    }
+
+    .info-image-sidebar img {
+      width: 200px;
+      height: 200px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 50%;
+      border: 5px solid rgb(220,190,137);
+      object-fit: cover;
+    }
+
+    .info-image-sidebar p {
+      font-size: 0.85em;
+      color: #666;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .card-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      padding: 2px 0;
+      width: 60%;
+      margin: 30px auto;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: calc(25% - 15px);
+      box-sizing: border-box;
+      overflow: hidden;
+      padding: 25px 15px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .card h3 {
+      position: static;
+      margin-top: 15px;
+      margin-bottom: 8px;
+      color: #054b88;
+      font-size: 1.3em;
+      font-weight: bold;
+      z-index: auto;
+    }
+
+    .card-icon-wrapper {
+      margin-top: 0;
+      margin-bottom: 0;
+      z-index: auto;
+      position: static;
+    }
+
+    .card-icon {
+      width: 86px;
+      height: 86px;
+      background-color: #ffffff;
+      border: 2px solid rgba(2,79,142,255);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .card-icon img {
+      width: 85%;
+      height: 85%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .card-content {
+      padding: 0 10px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .card-content p {
+      margin: 8px 0 15px 0;
+      font-size: 0.95em;
+      line-height: 1.4;
+      color: #666666;
+    }
+
+    .card-button {
+      background-color: rgba(2,79,142,255);
+      color: #ffffff;
+      border: 1px solid rgba(2,79,142,255);
+      padding: 10px 25px;
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      width: calc(100% - 30px);
+      max-width: 180px;
+      text-decoration: none;
+    }
+
+    .card-button:hover {
+      background-color: rgba(2,79,142,255);
+      color: #ffffff;
+      border-color: rgba(2,79,142,255);
+    }
+
+    .chat-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 330px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      z-index: 1000;
+    }
+
+    .chat-header {
+      background-color: #007bff;
+      color: white;
+      padding: 1px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .chat-header img {
+      width: 50px;
+      height: 50px;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    .chat-body {
+      padding: 15px;
+      background-color: #f9f9f9;
+      min-height: 100px;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .chat-footer {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background-color: #fff;
+    }
+
+    .chat-footer input {
+      flex-grow: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .chat-footer button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1200px) {
+      .card {
+        width: calc(33.333% - 13.333px);
+        min-height: 280px;
+      }
+      .info-section {
+        width: 80%;
+        flex-direction: column;
+        padding: 15px;
+      }
+      .info-column {
+        margin-right: 0;
+        margin-bottom: 20px;
+        min-width: auto;
+        padding: 0;
+      }
+      .info-image-sidebar {
+        flex-basis: auto;
+        max-width: 250px;
+        margin-top: 0;
+        position: static;
+      }
+      .carousel-section-wrapper,
+      .highlight-image,
+      .seccion-ubicacion-completa {
+        width: 80%;
+      }
+      .mapa-ubicacion {
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .card-section {
+        width: 80%;
+      }
+      .card {
+        width: calc(50% - 15px);
+        min-height: 270px;
+      }
+    }
+    
+    @media (max-width: 1630px) {
+      .nav-links-wrapper {
+        position: static;
+        transform: none;
+        flex-grow: 1;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      nav {
+        flex-direction: column;
+      }
+      .auth-buttons-nav, .user-profile-menu {
+        margin-top: 10px;
+      }
+    }
+
+
+    @media (max-width: 1630px) {
+      /* Estilos para el menú hamburguesa */
+      .nav-links-wrapper {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: #054b88; /* azul del header */
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          padding: 10px 0;
+      }
+
+              .menu-toggle {
+            display: block; 
+            font-size: 28px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #054b88; /* Azul igual al header */
+        }
+
+
+      .nav-links-wrapper.active {
+          display: flex;
+      }
+
+      .nav-links-wrapper a {
+          width: 100%;
+          text-align: center;
+          padding: 12px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.2);
+           color: #ffffff;
+      }
+
+      .nav-links-wrapper a:last-child {
+          border-bottom: none;
+      }
+
+      .menu-toggle {
+          display: block; /* Muestro el botón en pantallas pequeñas */
+      }
+
+      nav {
+          flex-direction: row;
+          align-items: center;
+          position: relative;
+          justify-content: space-between;
+          padding: 0 20px;
+      }
+      .auth-buttons-nav, .user-profile-menu {
+          margin-top: 0;
+      }
+
+      /* Resto de estilos responsivos */
+      .encabezado-contenido {
+        padding: 0;
+      }
+      .logo-wrapper {
+        padding: 0 15px;
+      }
+      .login-button {
+        right: 15px;
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+      .card-section {
+        width: 90%;
+        padding: 20px 0;
+      }
+      .card {
+        width: 100%;
+        min-height: 250px;
+        padding: 20px 15px;
+      }
+      .card-icon {
+          width: 50px;
+          height: 50px;
+      }
+      .card h3 {
+          font-size: 1.1em;
+      }
+      .card-content p {
+          font-size: 0.8em;
+      }
+      .card-button {
+          padding: 9px 20px;
+          font-size: 0.85em;
+          max-width: 150px;
+      }
+      .carousel-section-wrapper,
+      .highlight-image,
+      .seccion-ubicacion-completa {
+        width: 90%;
+        margin: 15px auto;
+      }
+      .carousel-section-wrapper {
+        height: 60px;
+      }
+      .text-carousel-overlay {
+        font-size: 0.9em;
+      }
+      .info-section {
+        width: 90%;
+        padding: 15px;
+        margin: 0px auto 15px auto;
+      }
+      .info-column {
+        margin-bottom: 20px;
+        padding: 10px 0;
+      }
+      .info-column h2 {
+        font-size: 1.5em;
+      }
+      .info-column p, .info-column ul li {
+        font-size: 0.9em;
+      }
+      .info-image-sidebar {
+        padding: 10px;
+      }
+      .mapa-ubicacion {
+        height: 300px;
+      }
+    }
+
+    .seccion-ubicacion-completa {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin: 30px auto;
+        width: 60%;
+        box-sizing: border-box;
+    }
+
+    .ubicacion-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      gap: 20px;
+      box-sizing: border-box;
+    }
+
+    .info-ubicacion-box {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+      box-sizing: border-box;
+      flex: 1 1 350px;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .info-ubicacion {
+      padding: 0;
+      flex: none;
+      width: 100%;
+    }
+
+    .info-ubicacion h2 {
+      font-size: 1.8rem;
+      color: #054b88;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .info-ubicacion p {
+      margin-bottom: 12px;
+      line-height: 1.5;
+      text-align: left;
+    }
+    
+    /* ESTILOS DE ENLACES CORREGIDOS: Sección de Ubicación */
+    .info-ubicacion a {
+      color: #054b88;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .info-ubicacion a:hover {
+      text-decoration: underline;
+    }
+
+    .ubicacion-button {
+      background-color: #054b88;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .ubicacion-button:hover {
+      background-color: #033a6b;
+    }
+
+    .mapa-ubicacion {
+      flex: 1 1 550px;
+      height: 450px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mapa-ubicacion iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    @media (max-width: 768px) {
+      .seccion-ubicacion-completa {
+        padding: 15px;
+        width: 90%;
+        margin: 15px auto;
+      }
+      .ubicacion-container {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+      }
+      .info-ubicacion-box,
+      .mapa-ubicacion {
+        flex: 1 1 auto;
+        width: 100%;
+        margin-bottom: 0;
+      }
+      .mapa-ubicacion {
+        height: 300px;
+      }
+      .ubicacion-button {
+        display: block;
+        width: calc(100% - 20px);
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      .ubicacion-button:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    footer {
+        background-color: #054b88;
+        color: #fff;
+        padding: 40px 20px;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .footer-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: 20px;
+        text-align: left;
+    }
+
+    .footer-section {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: 20px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        color: #dfc974;
+    }
+
+    .footer-section p,
+    .footer-section ul {
+        font-size: 0.95em;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .footer-section ul li a {
+        color: #fff;
+        text-decoration: none;
+        margin-bottom: 8px;
+        display: block;
+        transition: color 0.3s ease;
+    }
+
+    .footer-section ul li a:hover {
+        color: #dfc974;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .social-icons .icon-link img {
+        width: 30px;
+        height: 30px;
+        vertical-align: middle;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+    }
+
+    .social-icons .icon-link img:hover {
+        transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+        border-top: 2px solid #ffffff;
+        padding-top: 30px;
+        margin-top: 35px;
+        font-size: 0.85em;
+        text-align: center;
+        color: #bbb;
+    }
+
+    @media (max-width: 768px) {
+        footer {
+            padding: 30px 15px;
+        }
+        .footer-container {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-section {
+            min-width: unset;
+            width: 100%;
+        }
+
+        .social-icons {
+            justify-content: center;
+        }
+    }
+
+    .user-profile-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .user-profile-menu .profile-icon {
+        width: 35px;
+        height: 35px;
+        background-color: #dfc974;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em;
+        color: #ffffff;
+        font-weight: bold;
+    }
+    .user-profile-menu p {
+        margin: 0;
+        font-size: 1em;
+        color: #054b88;
+        font-weight: bold;
+    }
+    .btn-logout {
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        background-color: #dc3545;
+        color: #ffffff;
+        transition: background-color 0.3s;
+    }
+    .btn-logout:hover {
+        background-color: #c82333;
+    }
+    .auth-buttons-nav {
+        display: flex;
+        gap: 10px;
+    }
+    .auth-buttons-nav a {
+        background-color: #054b88;
+        color: #ffffff;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    .auth-buttons-nav a:hover {
+        background-color: #007bff;
+    }
+  </style>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+
+  <header>
+    <div class="encabezado-contenido">
+      <div class="logo-wrapper">
+        <img src="{{ url_for('static', filename='logoo.png') }}" alt="Logo" class="logo-header">
+        <h1 class="titulo-header">Asistencia Médica J.A</h1>
+      </div>
+    </div>
+    <nav>
+        <div class="nav-left">
+          <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </div>
+        <div class="nav-links-wrapper" id="navMenu">
+            <a href="/">Asistencia Profesional</a>
+            <a href="{{ url_for('agendar_cita') }}">Agendar Citas</a>
+            <a href="/recordatorio">Recordatorio de Medicación</a>
+            <a href="{{ url_for('consejos_salud') }}">Consejos de Salud</a>
+            <a href="{{ url_for('rcp') }}">RCP</a>
+        </div>
+        
+        
+        {% if user_name %}
+        <div class="user-profile-menu">
+            <div class="profile-icon">
+                <span>{{ user_name[0] | upper }}</span>
+            </div>
+            <p>Hola, {{ user_name }}</p>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Cerrar Sesión</a>
+        </div>
+        {% else %}
+        <div class="auth-buttons-nav">
+            <a href="{{ url_for('sesion') }}" class="btn-login">Iniciar Sesión</a>
+            <a href="{{ url_for('register') }}" class="btn-register">Registrarse</a>
+        </div>
+        {% endif %}
+    </nav>
+  </header>
+
+  <div class="banner">
+    <img src="{{ url_for('static', filename='bann.png') }}" alt="Banner">
+  </div>
+
+  <div class="carousel-section-wrapper">
+    <div class="carousel-background">
+      <img src="{{ url_for('static', filename='imagenes/vvvv.png') }}" alt="Fondo del Carrusel">
+    </div>
+
+    <div class="text-carousel-overlay" id="textCarousel">
+      <div class="carousel-text-slide active">
+        ¡Bienvenido! Tu salud es nuestra prioridad. ❤️‍🩹
+      </div>
+      <div class="carousel-text-slide">
+        Agenda tus citas médicas fácilmente en línea. 📅
+      </div>
+      <div class="carousel-text-slide">
+        Recuerda tus medicamentos con nuestros recordatorios personalizados. 💊
+      </div>
+      <div class="carousel-text-slide">
+        Aprende sobre RCP y primeros auxilios con nuestros cursos. 🏥
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-image">
+    <img src="{{ url_for('static', filename='loll.png') }}" alt="Otra Imagen Decorativa">
+  </div>
+
+  <section class="info-section">
+    <div class="info-column">
+      <h2>Guía Rápida de RCP y Primeros Auxilios</h2>
+      <p>Aprende a actuar en situaciones críticas con esta guía básica de reanimación cardiopulmonar (RCP) y primeros auxilios. La diferencia entre conocer o no estas técnicas puede salvar una vida.</p>
+   <ul>
+  <li><a href="{{ url_for('rcp', _anchor='rcp-solo-manos') }}">¿Qué es la RCP solo con manos?</a></li>
+  <li><a href="{{ url_for('rcp', _anchor='rcp-ninos') }}">RCP en niños y adultos</a></li>
+  <li><a href="{{ url_for('rcp', _anchor='maniobra-heimlich') }}">Maniobra de Heimlich en casos de atragantamiento.</a></li>
+  <li><a href="{{ url_for('rcp', _anchor='quemaduras') }}">¿Qué hacer ante quemaduras, heridas o desmayos?</a></li>
+  <li><a href="{{ url_for('rcp', _anchor='compresiones-toracicas') }}">¿Cómo realizar compresiones torácicas?</a></li>
+</ul>
+      <p>Recuerda: La atención inmediata puede marcar la diferencia. Infórmate, prepárate y actúa con confianza.</p>
+    </div>
+    <div class="info-image-sidebar">
+      <img src="{{ url_for('static', filename='rcp.png') }}" alt="Ilustración de Servicios">
+      </div>
+  </section>
+
+  <section class="card-section">
+    <div class="card">
+      <div class="card-icon-wrapper">
+        <div class="card-icon">
+          <img src="{{ url_for('static', filename='imagenes/asiss.png') }}" alt="Icono Asistencia Médica">
+        </div>
+      </div>
+      <h3>Perfil</h3>
+      <div class="card-content">
+        <p>Accede y modifica tu información personal y de contacto.</p>
+      </div>
+      <a href="{{ url_for('agendar_cita') }}" class="card-button">Ver perfil</a>
+    </div>
+
+  
+    <div class="card">
+      <div class="card-icon-wrapper">
+        <div class="card-icon">
+          <img src="{{ url_for('static', filename='imagenes/calee.png') }}" alt="Icono Agendar Citas">
+        </div>
+      </div>
+      <h3>Agendar Citas</h3>
+      <div class="card-content">
+        <p>Programa tus consultas de manera rápida y sencilla.</p>
+      </div>
+      <a href="{{ url_for('agendar_cita') }}" class="card-button">Agendar</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon-wrapper">
+        <div class="card-icon">
+          <img src="{{ url_for('static', filename='imagenes/rrrr.png') }}" alt="Icono Recordatorio de Medicación">
+        </div>
+      </div>
+      <h3>Recordatorio de Medicación</h3>
+      <div class="card-content">
+        <p>Recibe alertas para no olvidar tomar tus medicamentos.</p>
+      </div>
+      <a href="{{ url_for('recordatorio') }}" class="card-button">Configurar</a>
+    </div>
+
+      <div class="card">
+      <div class="card-icon-wrapper">
+        <div class="card-icon">
+          <img src="{{ url_for('static', filename='imagenes/cccc.png') }}" alt="Icono Consejos de Salud">
+        </div>
+      </div>
+      <h3>Consejos de Salud</h3>
+      <div class="card-content">
+        <p>Encuentra recomendaciones para mantener tu bienestar.</p>
+      </div>
+      <a href="{{ url_for('consejos_salud') }}" class="card-button">Ver más</a>
+    </div>
+  </section>
+
+  <div class="seccion-ubicacion-completa"> 
+      <section class="ubicacion-container">
+        <div class="info-ubicacion-box"> 
+            <div class="info-ubicacion">
+                <h2>Nuestra Ubicación</h2>
+                <p>
+                    Nos puedes ubicar facil aqui en <strong>Eps Sanitas Garzon</strong> 
+                </p>
+                <p>
+                    <strong>Dirección:</strong> Cra. 8 #7-24, Garzón, Huila<br>
+                    <strong>Horario:</strong> Abierto Lunes a Viernes · 8 a.m. - 3 p.m.<br>
+                </p>
+            </div>  
+        </div>
+        <div class="mapa-ubicacion">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.2238478494956!2d-75.63236742588145!3d4.721469092892973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3881f1e9c2f57b%3A0x6b8c9d2f7e8b1e4!2sCra.%208%20%237-24%2C%20Garz%C3%B3n%2C%20Huila!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </section>
+  </div>
+
+  <footer>
+      <div class="footer-container">
+          <div class="footer-section about">
+              <h3>Asistencia Médica J.A</h3>
+              <p>Tu salud es nuestra prioridad. Ofrecemos servicios médicos de calidad y atención personalizada para tu bienestar.</p>
+          </div>
+          <div class="footer-section links">
+              <h3>Enlaces Rápidos</h3>
+              <ul>
+                  <li><a href="#">Asistencia Profesional</a></li>
+                  <li><a href="/agendar_cita">Agendar Citas</a></li>
+                  <li><a href="/recordatorio">Recordatorio de Medicación</a></li>
+                  <li><a href="/consejos_salud">Consejos de Salud</a></li>
+                  <li><a href="/rcp">RCP y Primeros Auxilios</a></li>
+              </ul>
+          </div>
+          <div class="footer-section contact">
+              <h3>Contacto</h3>
+              <p><strong>Dirección:</strong> Cra. 8 #7-24, Garzón, Huila</p>
+              <p><strong>Teléfono:</strong> 88335255</p>
+              <p><strong>Celular:</strong> 312 545 6788</p>
+              <p><strong>Email:</strong> asistencia_medi@gmail.com</p>
+          </div>
+          <div class="footer-section social">
+              <h3>Síguenos</h3>
+              <div class="social-icons">
+                  <a href="https://www.facebook.com/share/1Jfkd8iXgG/?mibextid=wwXIfr" target="_blank" class="icon-link">
+        <img src="{{ url_for('static', filename='imagenes/face.png') }}" alt="Facebook">
+                  <a href="https://www.instagram.com/asistencia_medica?igsh=eHoxZGViYmtianZ4" target="_blank" class="icon-link">
+                  <img src="{{ url_for('static', filename='imagenes/igig.png') }}" alt="Instagram">
+                  <a href="#" class="icon-link"><img src="{{ url_for('static', filename='imagenes/whap.png') }}" alt="Whatsapp"></a>
+                </div>
+          </div>
+      </div>
+      <div class="footer-bottom">
+          <p>© 2025 Asistencia Médica J.A. Todos los derechos reservados.</p>
+      </div>
+  </footer>
+ <!-- Botón flotante para abrir chat -->
+<div id="chatButton" 
+     style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background-color: #007BFF; color: white; display: flex; justify-content: center; align-items: center; font-size: 30px; cursor: pointer; z-index: 1001;">
+  <img src="/static/imagenes/iconns.png" alt="Chatbot" style="width:40px; height:40px;">
+
+</div>
+
+<!-- Contenedor del chat -->
+<div class="chat-container" id="chatContainer" style="display: none;">
+  <div class="chat-header">
+    <img src="/static/imagenes/iconns.png" alt="Chatbot"> Chat bot
+    <span id="closeChat" style="float:right; cursor:pointer; margin-right:10px; font-weight:bold;">✖</span>
+  </div>
+  <div class="chat-body" id="chat"></div>
+  <div class="chat-footer">
+    <input type="text" id="userInput" placeholder="Escribe un mensaje...">
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+  // Abrir chat al hacer clic en el botón
+  const chatButton = document.getElementById('chatButton');
+  const chatContainer = document.getElementById('chatContainer');
+  const closeChat = document.getElementById('closeChat');
+
+  chatButton.addEventListener('click', () => {
+    chatContainer.style.display = 'block';
+    chatButton.style.display = 'none';
+  });
+
+  closeChat.addEventListener('click', () => {
+    chatContainer.style.display = 'none';
+    chatButton.style.display = 'flex';
+  });
+
+  // Mantener tu función sendMessage intacta
+  async function sendMessage() {
+    const input = document.getElementById('userInput');
+    const chat = document.getElementById('chat');
+    const userText = input.value;
+  const res = await fetch('https://medica-gfya.onrender.com/chat', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({ message: userText })
+});
+
+
+    const data = await res.json();
+    chat.innerHTML += '<p><strong>Bot:</strong> ' + data.reply + '</p>';
+    input.value = '';
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+ const userInput = document.getElementById('userInput');
+  
+  userInput.addEventListener('keydown', function(event) {
+    // Usamos event.keyCode === 13 o event.key === 'Enter' para detectar la tecla Enter
+    if (event.keyCode === 13) {
+      event.preventDefault(); 
+      sendMessage();          // Llama a la función de envío
+    }
+  });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.carousel-text-slide');
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.remove('active');
+        });
+
+        slides[index].classList.add('active');
+      }
+
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+      }
+
+      if (slides.length > 0) {
+        showSlide(currentSlide);
+        setInterval(nextSlide, 3000);
+      }
+    });
+
+    // Función para el menú hamburguesa
+    function toggleMenu() {
+        const navMenu = document.getElementById('navMenu');
+        navMenu.classList.toggle('active');
+    }
+
+  </script>
+
+</body>
+</html>

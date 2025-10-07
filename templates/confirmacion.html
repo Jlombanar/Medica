@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Exitoso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .success-icon {
+            color: #28a745;
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #3b82f6;
+            margin: 0 0 10px;
+            font-size: 28px;
+        }
+        
+        p {
+            color: #555;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 0 0 30px;
+        }
+
+        .return-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .return-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.493 5.53 7.546a.5.5 0 0 0-.708.708l2.5 2.5a.5.5 0 0 0 .708 0l4-4a.5.5 0 0 0-.708-.708"/>
+        </svg>
+    </div>
+    <h1>¡Registro completado con éxito!</h1>
+    <p>Gracias por unirte a Asistencia Médica J.A.</p>
+    <a href="/" class="return-link">Volver a la página principal</a>
+</div>
+
+</body>
+</html>

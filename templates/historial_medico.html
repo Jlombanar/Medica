@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial de Citas - Asistencia Médica J.A</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #0066cc;
+      --primary-dark: #004c99;
+      --primary-light: #e6f3ff;
+      --secondary-color: #64748b;
+      --accent-color: #0ea5e9;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-60px); }
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      padding: 2rem 2rem 2.5rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-subtitle {
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      transform: translateY(1rem);
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 2rem;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .card-title i {
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .card.results {
+      margin-top: 2rem;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      background: var(--bg-secondary);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .table-container {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-secondary);
+    }
+
+    .table th {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1rem 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .table td {
+      padding: 1rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.875rem;
+    }
+
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-danger { background: #fee2e2; color: #dc2626; }
+    .badge-warning { background: #fef3c7; color: #d97706; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i { font-size: 3rem; color: var(--border-color); margin-bottom: 1rem; }
+
+    /* Estilos para la vista de tarjetas en móviles */
+    .card-row {
+      display: none; /* Oculta las tarjetas por defecto en desktop */
+    }
+
+    .card-row .card-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .card-row .card-item-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-row .card-item-content {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+    }
+
+    .card-row .card-item-label {
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .card-row .card-item-value {
+      text-align: right;
+    }
+
+    /* Media Queries para responsividad */
+    @media (max-width: 767px) {
+      .header-content {
+        padding: 1.5rem 1rem 2rem;
+      }
+      .header h1 {
+        font-size: 1.75rem;
+      }
+      .header-subtitle {
+        font-size: 0.9rem;
+      }
+      .container {
+        padding: 0 0.5rem;
+        transform: translateY(0);
+      }
+      .filters {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .form-group {
+        width: 100%;
+      }
+      .table-container {
+        display: none; /* Oculta la tabla en móviles */
+      }
+      .card-row {
+        display: block; /* Muestra las tarjetas en móviles */
+      }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <h1><i class="fas fa-history"></i> Historial de Citas</h1>
+      <p class="header-subtitle">Gestiona y consulta el historial completo de citas médicas</p>
+    </div>
+  </header>
+
+  <div class="container fade-in">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">
+            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title"><i class="fas fa-filter"></i> Filtros de Búsqueda</h2>
+      </div>
+      <div class="card-body">
+        <form class="filters" method="GET" action="/historial_medico">
+          <div class="form-group">
+            <label for="mes" class="form-label">Mes</label>
+       <select id="mes" name="mes" class="form-control">
+  <option value="actual" {% if mes == 'actual' %}selected{% endif %}>Mes actual</option>
+  <option value="todas" {% if mes == 'todas' %}selected{% endif %}>Todos los meses</option>
+  <option disabled>──────────</option>
+  {% for i, mes_nombre in [
+    (1,"Enero"),(2,"Febrero"),(3,"Marzo"),(4,"Abril"),
+    (5,"Mayo"),(6,"Junio"),(7,"Julio"),(8,"Agosto"),
+    (9,"Septiembre"),(10,"Octubre"),(11,"Noviembre"),(12,"Diciembre")] %}
+    <option value="{{ i }}" {% if mes == i|string %}selected{% endif %}>{{ mes_nombre }}</option>
+  {% endfor %}
+</select>
+
+
+          </div>
+
+          <div class="form-group">
+            <label for="tipo_doc" class="form-label">Tipo de Documento</label>
+            <select id="tipo_doc" name="tipo_doc" class="form-control">
+              <option value="">Seleccionar tipo</option>
+              <option value="cc" {% if tipo_doc == "cc" %}selected{% endif %}>Cédula de Ciudadanía</option>
+              <option value="ti" {% if tipo_doc == "ti" %}selected{% endif %}>Tarjeta de Identidad</option>
+              <option value="pa" {% if tipo_doc == "pa" %}selected{% endif %}>Pasaporte</option>
+              <option value="ce" {% if tipo_doc == "ce" %}selected{% endif %}>Cédula de Extranjería</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="documento" class="form-label">Número de Documento</label>
+            <input id="documento" type="text" name="documento" maxlength="10" 
+                   placeholder="Ingrese el número..." value="{{ documento or '' }}" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Alcance de Búsqueda</label>
+            <div class="radio-group">
+              <label class="radio-item">
+                <input type="radio" name="scope" value="mias" {% if scope=="mias" %}checked{% endif %}> Mis citas
+              </label>
+              <label class="radio-item">
+                <input type="radio" name="scope" value="todas" {% if scope=="todas" %}checked{% endif %}> Historial completo
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i> Buscar Citas
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card results">
+      <div class="card-header">
+        <h2 class="card-title"><i class="fas fa-calendar-alt"></i> {{ titulo_mes }}</h2>
+      </div>
+      <div class="card-body">
+        {% if citas_pasadas %}
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-user"></i> Paciente</th>
+                  <th><i class="fas fa-id-card"></i> Documento</th>
+                  {% if request.args.get("scope") == "todas" %}
+                  <th><i class="fas fa-user-md"></i> Médico</th>
+                  {% endif %}
+                  <th><i class="fas fa-calendar"></i> Fecha</th>
+                  <th><i class="fas fa-clock"></i> Hora</th>
+                  <th><i class="fas fa-info-circle"></i> Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cita in citas_pasadas %}
+                <tr>
+                  <td><i class="fas fa-user" style="color: var(--primary-color);"></i> <strong>{{ cita.nombre_paciente }}</strong></td>
+                  <td><span style="text-transform: uppercase; font-weight: 600;">{{ cita.tipo_doc }}</span> {{ cita.documento }}</td>
+                  {% if request.args.get("scope") == "todas" %}
+                  <td><i class="fas fa-user-md" style="color: var(--secondary-color);"></i> {{ cita.medico }}</td>
+                  {% endif %}
+                  <td><i class="fas fa-calendar" style="color: var(--success-color);"></i> {{ cita.fecha }}</td>
+                  <td><i class="fas fa-clock" style="color: var(--accent-color);"></i> {{ cita.hora }}</td>
+                  <td>
+                    {% if cita.estado == "Completada" %}
+                      <span class="badge badge-success"><i class="fas fa-check-circle"></i> {{ cita.estado }}</span>
+                    {% elif cita.estado == "Cancelada" %}
+                      <span class="badge badge-danger"><i class="fas fa-times-circle"></i> {{ cita.estado }}</span>
+                    {% else %}
+                      <span class="badge badge-warning"><i class="fas fa-clock"></i> {{ cita.estado }}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card-row">
+            {% for cita in citas_pasadas %}
+              <div class="card-item">
+                <div class="card-item-title"><i class="fas fa-user" style="color: var(--primary-color);"></i> Paciente: {{ cita.nombre_paciente }}</div>
+                <div class="card-item-content">
+                  <span class="card-item-label">Documento:</span>
+                  <span class="card-item-value">{{ cita.tipo_doc }} {{ cita.documento }}</span>
+                </div>
+                {% if request.args.get("scope") == "todas" %}
+                <div class="card-item-content">
+                  <span class="card-item-label">Médico:</span>
+                  <span class="card-item-value">{{ cita.medico }}</span>
+                </div>
+                {% endif %}
+                <div class="card-item-content">
+                  <span class="card-item-label">Fecha:</span>
+                  <span class="card-item-value">{{ cita.fecha }}</span>
+                </div>
+                <div class="card-item-content">
+                  <span class="card-item-label">Hora:</span>
+                  <span class="card-item-value">{{ cita.hora }}</span>
+                </div>
+                <div class="card-item-content">
+                  <span class="card-item-label">Estado:</span>
+                  <span class="card-item-value">
+                    {% if cita.estado == "Completada" %}
+                      <span class="badge badge-success"><i class="fas fa-check-circle"></i> {{ cita.estado }}</span>
+                    {% elif cita.estado == "Cancelada" %}
+                      <span class="badge badge-danger"><i class="fas fa-times-circle"></i> {{ cita.estado }}</span>
+                    {% else %}
+                      <span class="badge badge-warning"><i class="fas fa-clock"></i> {{ cita.estado }}</span>
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <i class="fas fa-calendar-times"></i>
+            <h3>No hay citas encontradas</h3>
+            <p>No se encontraron citas que coincidan con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <a href="/panel_medico" class="btn btn-secondary" style="font-size: 1rem; padding: 1rem 2rem;">
+        <i class="fas fa-arrow-left"></i> Volver al Panel
+      </a>
+    </div>
+  </div>
+</body>
+</html>

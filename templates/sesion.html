@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL: AUMENTADO EL ANCHO --- */
+        .login-container {
+            background-color: #fff;
+            padding: 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px; /* ANCHO AUMENTADO */
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-bar {
+            background-color: #3b82f6;
+            color: #fff;
+            padding: 20px; /* PADDING AUMENTADO */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-bar .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* ESPACIO AUMENTADO */
+        }
+        
+        .header-bar .logo {
+            width: 50px; /* TAMAÑO DE LOGO AUMENTADO */
+            height: auto;
+        }
+        
+        .header-bar .title {
+            font-size: 22px; /* TAMAÑO DE FUENTE AUMENTADO */
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        /* --- CONTENEDOR DEL FORMULARIO: PADDING AUMENTADO --- */
+        .login-content {
+            padding: 50px; /* PADDING AUMENTADO */
+        }
+
+        .login-header .main-title {
+            color: #3b82f6;
+            margin: 0 0 20px; /* MARGEN AUMENTADO */
+            font-size: 28px; /* TAMAÑO DE FUENTE AUMENTADO */
+        }
+
+        .login-form .input-group {
+            margin-bottom: 25px; /* MARGEN AUMENTADO */
+            text-align: left;
+        }
+        
+        .login-form .input-group label {
+            display: block;
+            margin-bottom: 10px; /* MARGEN AUMENTADO */
+            color: #333;
+            font-weight: bold;
+            font-size: 16px; /* TAMAÑO DE FUENTE AUMENTADO */
+        }
+
+        .login-form .input-group .required-field {
+            color: red;
+            font-size: 14px; /* TAMAÑO DE FUENTE AUMENTADO */
+            margin-top: 5px;
+        }
+
+        .login-form .input-group select,
+        .login-form .input-group input[type="text"],
+        .login-form .input-group input[type="password"] {
+            width: 100%;
+            padding: 15px; /* PADDING AUMENTADO */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 18px; /* TAMAÑO DE FUENTE AUMENTADO */
+        }
+        
+        .login-form .input-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') no-repeat right 15px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px; /* PADDING AUMENTADO */
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px; /* TAMAÑO DE FUENTE AUMENTADO */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+        }
+
+        .additional-options {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px; /* TAMAÑO DE FUENTE AUMENTADO */
+        }
+
+        .additional-options a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .additional-options a:hover {
+            text-decoration: underline;
+        }
+        
+        .flash-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .flash-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="header-bar">
+        <div class="logo-container">
+            <img src="/static/logoo.png" alt="Logo" class="logo">
+            <h1 class="title">Asistencia Médica J.A</h1>
+        </div>
+    </div>
+    
+    <div class="login-content">
+        <div class="login-header">
+            <h2 class="main-title">Iniciar sesión</h2>
+        </div>
+        
+        <!-- Bloque para mostrar mensajes flash del servidor -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="flash-message error">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form class="login-form" method="post" action="/sesion">
+            <div class="input-group">
+                <label for="document_type">Tipo de documento: *</label>
+                <select id="document_type" name="document_type">
+                    <option value="">Selecciona</option>
+                    <option value="cc">Cédula de Ciudadanía</option>
+                    <option value="ti">Tarjeta de Identidad</option>
+                    <option value="ce">Cédula de Extranjería</option>
+                    <option value="rc">Registro Civil</option>
+                    <option value="cd">Carné Diplomático</option>
+                    <option value="pa">Pasaporte</option>
+                    <option value="pep">Permiso especial de Permanencia</option>
+                    <option value="sp">Salvoconducto de Permanencia</option>
+                    <option value="ppt">Permiso por Protección Temporal</option>
+                    <option value="nit">NIT</option>
+                    <option value="ponu">Pasaporte de la ONU</option>
+                    <option value="cnv">Certificado Nacido Vivo</option>
+                </select>
+                <p class="required-field">Campo requerido</p>
+            </div>
+
+            <div class="input-group">
+                <label for="document_number">Número de documento: *</label>
+                <input type="text" id="document_number" name="document_number">
+            </div>
+
+            <div class="input-group">
+                <label for="password">Contraseña: *</label>
+                <input type="password" id="password" name="password">
+            </div>
+            
+            <button type="submit" class="login-button">Continuar</button>
+
+            <div class="additional-options">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="/register">Regístrate</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-bar {
+            background-color: #3b82f6;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+        
+        .header-bar .logo {
+            width: 50px;
+            height: auto;
+        }
+        
+        .header-bar .title-link {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .header-bar .title {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .login-content {
+            padding: 50px;
+        }
+
+        .login-header .main-title {
+            color: #3b82f6;
+            margin: 0 0 20px;
+            font-size: 28px;
+        }
+
+        .login-form .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .login-form .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .login-form .input-group select:invalid:not(:focus):not(:placeholder-shown),
+        .login-form .input-group input:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: red;
+        }
+        
+        .login-form .required-field {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .login-form .input-group select:invalid:not(:focus):not(:placeholder-shown) + .required-field,
+        .login-form .input-group input:invalid:not(:focus):not(:placeholder-shown) + .required-field {
+            display: block;
+        }
+
+        .login-form .input-group select,
+        .login-form .input-group input[type="text"],
+        .login-form .input-group input[type="password"],
+        .login-form .input-group input[type="email"],
+        .login-form .input-group input[type="tel"],
+        .login-form .input-group input[type="date"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+        
+        .login-form .input-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') no-repeat right 15px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .radio-group {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        
+        .radio-group label {
+            margin-right: 20px;
+            display: inline-block;
+            font-weight: normal;
+        }
+
+        .password-error {
+            color: red;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .register-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-button:hover {
+            background-color: #0056b3;
+        }
+
+        .login-link {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="header-bar">
+        <a href="/" class="logo-container">
+            <img src="/static/logoo.png" alt="Logo" class="logo">
+        </a>
+        <a href="/" class="title-link">
+            <h1 class="title">Asistencia Médica J.A</h1>
+        </a>
+    </div>
+    
+    <div class="login-content">
+        <div class="login-header">
+            <h2 class="main-title">Regístrate</h2>
+        </div>
+        
+        <form class="login-form" id="registerForm" action="/register" method="POST">
+            <div class="input-group">
+                <label for="nombre">Nombre: *</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+            
+            <div class="input-group">
+                <label for="tipo_documento">Tipo de documento: *</label>
+                <select id="tipo_documento" name="tipo_documento" required>
+                    <option value="">Selecciona</option>
+                    <option value="cc">Cédula de Ciudadanía</option>
+                    <option value="ti">Tarjeta de Identidad</option>
+                    <option value="ce">Cédula de Extranjería</option>
+                    <option value="rc">Registro Civil</option>
+                    <option value="cd">Carné Diplomático</option>
+                    <option value="pa">Pasaporte</option>
+                    <option value="pep">Permiso especial de Permanencia</option>
+                    <option value="sp">Salvoconducto de Permanencia</option>
+                    <option value="ppt">Permiso por Protección Temporal</option>
+                    <option value="nit">NIT</option>
+                    <option value="ponu">Pasaporte de la ONU</option>
+                    <option value="cnv">Certificado Nacido Vivo</option>
+                </select>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+
+     <div class="input-group">
+    <label for="documento">Número de documento: *</label>
+    <input type="text" id="documento" name="documento" 
+           pattern="[0-9]{10}" 
+           maxlength="10" minlength="10" 
+           required 
+           placeholder="10 dígitos"
+           title="El número de documento debe contener exactamente 10 dígitos">
+    <p class="required-field">Debe contener exactamente 10 números</p>
+</div>
+
+
+
+            <div class="input-group">
+                <label for="correo">Correo electrónico: *</label>
+                <input type="email" id="correo" name="correo" 
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                    required placeholder="ejemplo@correo.com">
+                <p class="required-field">Debe ser un correo válido</p>
+            </div>
+
+            <div class="input-group">
+                <label for="contrasena">Contraseña: *</label>
+                <input type="password" id="contrasena" name="contrasena" required>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+
+            <div class="input-group">
+                <label for="confirm_contrasena">Confirma contraseña: *</label>
+                <input type="password" id="confirm_contrasena" name="confirm_contrasena" required>
+                <p class="password-error" id="password-error">Las contraseñas no coinciden.</p>
+            </div>
+            
+            <div class="input-group">
+                <label for="telefono">Teléfono: *</label>
+                <input type="tel" id="telefono" name="telefono" 
+                    pattern="[0-9]{10}" maxlength="10" minlength="10" required>
+                <p class="required-field">Debe contener exactamente 10 números</p>
+            </div>
+
+            <div class="input-group">
+                <label for="direccion">Dirección: *</label>
+                <input type="text" id="direccion" name="direccion" required>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+            
+            <div class="input-group">
+                <label for="fecha_nacimiento">Fecha de nacimiento: *</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+
+            <div class="input-group">
+                <label for="genero">Género: *</label>
+                <select id="genero" name="genero" required>
+                    <option value="">Selecciona</option>
+                    <option value="Hombre">Hombre</option>
+                    <option value="Mujer">Mujer</option>
+                    <option value="Otro">Otro</option>
+                    <option value="Prefiero no decir">Prefiero no decir</option>
+                </select>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+
+            <div class="input-group">
+                <label for="ciudad">Ciudad: *</label>
+                <input type="text" id="ciudad" name="ciudad" required>
+                <p class="required-field">Este campo es obligatorio</p>
+            </div>
+
+            <div class="radio-group">
+                <label>Soy afiliado: *</label>
+                <input type="radio" id="afiliado_si" name="afiliado" value="si" required>
+                <label for="afiliado_si">Sí</label>
+                <input type="radio" id="afiliado_no" name="afiliado" value="no" required>
+                <label for="afiliado_no">No</label>
+                <p class="required-field" style="display: none;">Este campo es obligatorio</p>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="accept_policies" name="accept_policies" required>
+                <label for="accept_policies">Acepto Políticas Protección Datos *</label>
+                <p class="required-field">Debe aceptar las políticas de protección de datos</p>
+            </div>
+            
+            <button type="submit" class="register-button">Registrarme</button>
+
+            <div class="login-link">
+                <p>¿Ya tienes una cuenta? <a href="/sesion">Iniciar sesión</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('contrasena');
+    const confirmPassword = document.getElementById('confirm_contrasena');
+    const passwordError = document.getElementById('password-error');
+
+    form.addEventListener('submit', function(event) {
+        if (password.value !== confirmPassword.value) {
+            event.preventDefault();
+            passwordError.style.display = 'block';
+            confirmPassword.focus();
+        } else {
+            passwordError.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

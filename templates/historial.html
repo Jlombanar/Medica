@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Citas - Asistencia Médica J.A</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<style>
+    /* --- Estilos unificados con la página de documentos --- */
+    :root {
+        --primary-color: #054b88;
+        --primary-hover: #007bff;
+        --secondary-color: #6c757d;
+        --light-bg: #f8f9fa;
+        --border-color: #dee2e6;
+        --text-dark: #343a40;
+        --text-light: #6c757d;
+        --card-bg: #ffffff;
+        --shadow: 0 8px 30px rgba(0,0,0,0.08);
+        --success-color: #28a745;
+        --danger-color: #e74c3c;
+    }
+    
+    body {
+        font-family: 'Poppins', 'Arial', sans-serif;
+        background-color: #f4f6f9;
+        margin: 0; padding: 0;
+        line-height: 1.6;
+    }
+
+    header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #007bff 100%);
+        color: #ffffff;
+        box-shadow: var(--shadow);
+        position: relative;
+    }
+    .header-content { padding: 30px 40px; }
+    .header-info h1 { margin: 0 0 8px 0; font-size: 2.2em; font-weight: 600; }
+    .header-info p { margin: 0; font-size: 1.1em; opacity: 0.9; }
+
+    .main-container { max-width: 90%; margin: 0 auto; padding: 30px 20px; }
+    
+    .section {
+        background: var(--card-bg);
+        margin: 30px 0;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+    }
+    .section-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 25px; padding-bottom: 15px;
+        border-bottom: 2px solid var(--light-bg);
+    }
+    .section-title {
+        display: flex; align-items: center; gap: 12px;
+        margin: 0; color: var(--primary-color);
+        font-size: 1.5em; font-weight: 600;
+    }
+    .section-icon {
+        width: 40px; height: 40px;
+        background: var(--primary-color); color: white;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    /* --- Tabla y estilo de datos --- */
+    .table-responsive { overflow-x: auto; margin-top: 15px; }
+    table {
+        width: 100%; border-collapse: collapse;
+        background: white; border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    table th {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #007bff 100%);
+        color: white; padding: 15px 12px;
+        text-align: left; font-weight: 600; font-size: 0.95em;
+    }
+    table td { padding: 15px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    table tr:hover { background-color: #f8f9ff; }
+    
+    
+    /* 🔹 Iconos dentro de las celdas */
+    table td i {
+        margin-right: 6px;
+        color: var(--primary-color);
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    .status-pendiente {
+        background: #fff3cd;
+        color: #856404;
+    }
+    .status-completada {
+        background: #dcfce7;
+        color: #166534;
+    }
+    .status-cancelada {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    /* --- Estilos de botones --- */
+    .btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 18px; font-size: 0.9em; font-weight: 600;
+        border-radius: 8px; cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        border: none;
+    }
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #fff; color: var(--primary-color); border: 1px solid var(--primary-color); }
+    .btn-secondary:hover { background: var(--light-bg); color: var(--primary-hover); transform: none; box-shadow: none;}
+    .btn-cancelar { background: var(--danger-color); color: white; }
+    .btn-cancelar:hover { background: #c0392b; }
+
+    .bottom-actions {
+        display: flex; gap: 15px;
+        justify-content: center;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+    .btn-panel {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 28px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        color: #fff;
+        background: linear-gradient(135deg, #054b88, #007bff);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    .btn-panel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 75, 136, 0.3);
+    }
+    
+    .no-data { text-align: center; padding: 40px 20px; color: var(--text-light); }
+
+    /* 🔹 Estilos del mensaje de confirmación */
+    .flash-message {
+        margin: 20px auto 0;
+        max-width: 90%;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        text-align: center;
+        font-weight: bold;
+    }
+    .flash-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .flash-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    /* 🔹 Vista responsiva tipo cards */
+    @media (max-width: 768px) {
+        table thead { display: none; }
+        table, table tbody, table tr, table td { display: block; width: 100%; }
+        table tr {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        table td {
+            text-align: left;
+            padding: 8px 12px; /* Simplificamos el padding */
+            position: relative;
+            border-bottom: 1px solid #eee;
+            word-wrap: break-word;
+        }
+        table td::before {
+            content: attr(data-label);
+            display: block; /* Forzamos la etiqueta a una nueva línea */
+            font-weight: bold;
+            color: #054b88;
+            margin-bottom: 5px; /* Añadimos un pequeño margen para separar */
+        }
+        table td:last-child { border-bottom: none; }
+    }
+    
+</style>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-info">
+                <h1><i class="fas fa-history"></i> Historial de Citas</h1>
+                <p>Consulta el estado y los detalles de tus citas médicas.</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message {% if category == 'success' %}flash-success{% elif category == 'error' %}flash-error{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-icon"><i class="fas fa-clipboard-list"></i></div>
+                    Citas Registradas
+                </h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Correo</th>
+                            <th>Especialidad</th>
+                            <th>Médico</th>
+                            <th>Fecha/Hora</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if citas %}
+                            {% for c in citas %}
+                            <tr>
+                                <td data-label="Paciente">
+                                    <i class="fas fa-user"></i> {{ c.nombre_paciente }}
+                                </td>
+                                <td data-label="Correo">
+                                    <i class="fas fa-envelope"></i> {{ c.correo }}
+                                </td>
+                                <td data-label="Especialidad">
+                                    <i class="fas fa-stethoscope"></i> {{ c.especialidad }}
+                                </td>
+                                <td data-label="Médico">
+                                    <i class="fas fa-user-md"></i> {{ c.medico }}
+                                </td>
+                                <td data-label="Fecha/Hora">
+                                    <i class="fas fa-calendar-alt"></i> {{ c.fecha }}
+                                    <br>
+                                    <i class="fas fa-clock"></i> {{ c.hora }}
+                                </td>
+                                <td data-label="Tipo">
+                                    <i class="fas fa-list-alt"></i> {{ c.tipo_cita }}
+                                </td>
+                                <td data-label="Estado">
+                                    {% if c.estado == "Pendiente" %}
+                                        <span class="status-badge status-pendiente">{{ c.estado }}</span>
+                                    {% elif c.estado == "Completada" %}
+                                        <span class="status-badge status-completada">{{ c.estado }}</span>
+                                    {% else %}
+                                        <span class="status-badge status-cancelada">{{ c.estado }}</span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Acciones">
+                                    {% if c.estado == "Pendiente" %}
+                                        <form action="{{ url_for('cancelar_cita', cita_id=c.id) }}" method="POST" class="cancelar-form" style="display:inline;">
+                                            <button type="button" class="btn btn-cancelar cancelar-btn">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <span>-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="8" class="no-data"><i class="fas fa-folder-open"></i><br>No tienes citas registradas aún.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bottom-actions">
+            <a href="{{ url_for('agendar_cita') }}" class="btn-panel">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <a href="{{ url_for('citas') }}" class="btn-panel">
+                <i class="fas fa-calendar-plus"></i> Agendar Nueva Cita
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll(".cancelar-btn").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const form = this.closest("form");
+                Swal.fire({
+                    title: '¿Cancelar cita?',
+                    text: "Esta acción no se puede deshacer",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e74c3c',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, cancelar',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

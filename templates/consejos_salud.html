@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-sclae=1.0">
+    <title>Consejos de Salud - Tu Bienestar es Nuestra Prioridad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #054b88;
+            --accent-gold: #dfc974;
+            --text-color: #212529;
+            --light-bg: #f8f9fa;
+            --card-bg: #fff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* --- ESTILOS DE ENCABEZADO EXISTENTES --- */
+        header {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            border-bottom: 13px solid #dfc974;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .logo-header {
+            height: 80px;
+            margin-right: 15px;
+        }
+
+        .encabezado-contenido {
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('{{ url_for("static", filename="tttt.png") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+
+        .titulo-header {
+            font-size: 32px;
+            margin: 0;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            margin: 6px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links-wrapper {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            color: #054b88;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 7px 8px;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+        }
+
+       @media (max-width: 768px) {
+            nav {
+                justify-content: flex-start;
+            }
+
+            .menu-toggle {
+                display: block;
+                font-size: 30px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                color: #054b88;
+            }
+
+            .nav-links-wrapper {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: #ffffff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 10px 0;
+                margin-top: 10px;
+            }
+
+            .nav-links-wrapper.active {
+                display: flex;
+            }
+
+            .nav-links-wrapper a {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .nav-links-wrapper a:last-child {
+                border-bottom: none;
+            }
+        }
+        /* --- FIN DE ESTILOS DE ENCABEZADO --- */
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(5, 75, 136, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        /* === NUEVA SECCIÓN MEJORADA === */
+        .main-header-consejos {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbfd 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border-radius: 20px 20px 0 0; /* Agregado para bordes redondeados en la parte superior */
+        }
+
+        /* Elementos decorativos de fondo */
+        .main-header-consejos::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(227, 204, 111, 0.626) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .page-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #054b88 0%, #0066cc 50%, #007bff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #dfc974, #f0d98a);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(223, 201, 116, 0.4);
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 1.5rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Botones mejorados */
+        .emergency-banner {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 30px rgba(5, 75, 136, 0.1);
+            border: 1px solid rgba(223, 201, 116, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--primary-blue);
+            border: 2px solid rgba(5, 75, 136, 0.1);
+            font-size: 16px;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 140px;
+            justify-content: center;
+        }
+        
+        /* Efecto dorado más notable en hover */
+        .tab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(5, 75, 136, 0.2);
+            border-color: #f0d98a; /* Color dorado más vibrante en el borde */
+            background: linear-gradient(135deg, #fff 0%, #fefcf5 100%); /* Ligeramente más claro en el hover */
+        }
+        
+        /* Efecto dorado más notable para el botón activo */
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0066cc 100%);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(5, 75, 136, 0.3);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 5px; /* Aumentado para mayor visibilidad */
+            background: linear-gradient(90deg, #dfc974, #f0d98a); /* Gradiente dorado */
+            border-radius: 2px;
+            box-shadow: 0 0 15px rgba(223, 201, 116, 0.8); /* Sombra dorada más intensa */
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+        }
+        /* === FIN NUEVA SECCIÓN === */
+
+
+        .content {
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .salud-container {
+            text-align: center;
+            background: #f8fbfd;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 900px;
+            margin: auto;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(5, 75, 136, 0.1);
+            border-left: 5px solid #dfc974;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #dfc974, #f0d98a);
+            border-radius: 0 15px 0 50px;
+            opacity: 0.3;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(5, 75, 136, 0.2);
+            border-left-color: #054b88;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card h3 {
+            color: #054b88;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-tips {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .card-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-tips li {
+            padding: 0.3rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .card-tips li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #054b88;
+            font-weight: bold;
+        }
+        
+        .hero-section-alt-style {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #054b88; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .hero-section-alt-style:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-section-alt-style h2 {
+            color: #054b88; 
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: left;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-section-alt-style h2::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: var(--accent-gold);
+            margin-top: 10px;
+        }
+
+        .hero-section-alt-style p {
+            color: #333; 
+            line-height: 1.6; 
+            font-size: 1rem; 
+            text-align: justify; 
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #054b88, #0a5fa0);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #dfc974;
+        }
+
+        .footer {
+            background: #054b88;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #dfc974;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .main-header-consejos {
+                padding: 2rem 1rem;
+            }
+            
+            .emergency-banner {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                max-width: 280px;
+                padding: 0.8rem 1.5rem;
+                font-size: 15px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-section-alt-style h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero-section-alt-style p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+    <header>
+        <div class="encabezado-contenido">
+            <div class="logo-wrapper">
+                <img src="{{ url_for('static', filename='logoo.png') }}" alt="Logo" class="logo-header">
+                <h1 class="titulo-header">Asistencia Médica J.A</h1>
+            </div>
+        </div>
+        <nav>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <div class="nav-links-wrapper" id="navMenu">
+              <a href="/">Asistencia Profesional</a>
+            <a href="{{ url_for('agendar_cita') }}">Agendar Citas</a>
+            <a href="/recordatorio">Recordatorio de Medicación</a>
+            <a href="{{ url_for('consejos_salud') }}">Consejos de Salud</a>
+            <a href="{{ url_for('rcp') }}">RCP</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main class="content">
+            <div class="main-header-consejos">
+                <div class="page-header">
+                    <h1 class="page-title">Consejos de Salud</h1>
+                    <p class="page-subtitle">Explora nuestros consejos para una vida más saludable.</p>
+                </div>
+    
+                <div class="emergency-banner">
+                    <button class="tab-btn active" onclick="showSection('general')">
+                        <span class="btn-icon">⚕️</span>
+                        General
+                    </button>
+                    <button class="tab-btn" onclick="showSection('nutricion')">
+                        <span class="btn-icon">🥗</span>
+                        Nutrición
+                    </button>
+                    <button class="tab-btn" onclick="showSection('ejercicio')">
+                        <span class="btn-icon">🏃‍♂️</span>
+                        Ejercicio
+                    </button>
+                    <button class="tab-btn" onclick="showSection('mental')">
+                        <span class="btn-icon">🧠</span>
+                        Salud Mental
+                    </button>
+                    <button class="tab-btn" onclick="showSection('prevencion')">
+                        <span class="btn-icon">✋🏻</span>
+                        Prevención
+                    </button>
+                </div>
+            </div>
+            
+            <section id="general" class="section active">
+                <div class="hero-section hero-section-alt-style">
+                    <h2>¿Porqué es importante la Salud?</h2>
+                    <p>Es fundamental para el bienestar integral, lo que nos permite vivir una vida plena, productiva y con mayor calidad. Una buena salud física y mental contribuye a aumentar la energía y la productividad, mejora el estado de ánimo, fortalece el sistema inmunológico y previene enfermedades.</p>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">8h</div>
+                        <div>Horas de sueño recomendadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2L</div>
+                        <div>Agua diaria mínima</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30min</div>
+                        <div>Ejercicio diario</div>
+                    </div>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <span class="card-icon">💧</span>
+                        <h3>Hidratación Adecuada</h3>
+                        <p>El agua es esencial para todas las funciones corporales. Una hidratación adecuada mejora la digestión, regula la temperatura corporal y mantiene la piel saludable.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Bebe 8-10 vasos de agua al día</li>
+                                <li>Aumenta la ingesta en días calurosos</li>
+                                <li>Incluye frutas con alto contenido de agua</li>
+                                <li>Evita el exceso de bebidas azucaradas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">😴</span>
+                        <h3>Sueño Reparador</h3>
+                        <p>Un sueño de calidad es fundamental para la recuperación física y mental. Durante el sueño, el cuerpo repara tejidos y consolida la memoria.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Mantén un horario regular de sueño</li>
+                                <li>Crea un ambiente oscuro y silencioso</li>
+                                <li>Evita pantallas antes de dormir</li>
+                                <li>Usa técnicas de relajación</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">🩺</span>
+                        <h3>Chequeos Médicos</h3>
+                        <p>La prevención es la mejor medicina. Los chequeos regulares pueden detectar problemas de salud antes de que se vuelvan graves.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Visita al médico anualmente</li>
+                                <li>Realiza exámenes de sangre periódicos</li>
+                                <li>Mantén al día tus vacunas</li>
+                                <li>Controla tu presión arterial</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="nutricion" class="section">
+                <div class="hero-section hero-section-alt-style">
+                    <h2>Nutrición Balanceada</h2>
+                    <p>Alimenta tu cuerpo con los nutrientes que necesita para funcionar al máximo.  
+                        Una nutrición balanceada incluye:</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <span class="card-icon">🍎</span>
+                        <h3>Frutas y Verduras</h3>
+                        <p>Las frutas y verduras son fuentes ricas en vitaminas, minerales y antioxidantes que fortalecen tu sistema inmunológico.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Consume 5 porciones al día</li>
+                                <li>Varía los colores para más nutrientes</li>
+                                <li>Prefiere frutas enteras sobre jugos</li>
+                                <li>Incluye vegetales de hoja verde</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">🥗</span>
+                        <h3>Proteínas Saludables</h3>
+                        <p>Las proteínas son esenciales para la construcción y reparación de tejidos, así como para el funcionamiento del sistema inmune.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Incluye pescado, pollo, legumbres</li>
+                                <li>Combina proteínas vegetales</li>
+                                <li>Limita las carnes procesadas</li>
+                                <li>Considera huevos y lácteos bajos en grasa</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">🌾</span>
+                        <h3>Carbohidratos Complejos</h3>
+                        <p>Los carbohidratos complejos proporcionan energía sostenida y son ricos en fibra, vitaminas y minerales.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Elige granos integrales</li>
+                                <li>Incluye quinoa, avena, arroz integral</li>
+                                <li>Limita azúcares refinados</li>
+                                <li>Combina con proteínas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ejercicio" class="section">
+                <div class="hero-section hero-section-alt-style">
+                    <h2>Actividad Física Regular</h2>
+                    <p>
+                        Mantener una rutina de actividad física regular es esencial para la salud del cuerpo y la mente.  
+                        El ejercicio contribuye a mejorar la resistencia, fuerza y bienestar general.</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <span class="card-icon">🏃‍♂️</span>
+                        <h3>Ejercicio Cardiovascular</h3>
+                        <p>El ejercicio cardiovascular fortalece el corazón, mejora la circulación y ayuda a mantener un peso saludable.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>30 minutos de actividad moderada diaria</li>
+                                <li>Caminar, nadar, bailar o correr</li>
+                                <li>Aumenta gradualmente la intensidad</li>
+                                <li>Encuentra actividades que disfrutes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">💪</span>
+                        <h3>Fortalecimiento Muscular</h3>
+                        <p>El entrenamiento de fuerza mejora la densidad ósea, acelera el metabolismo y previene la pérdida muscular relacionada con la edad.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>2-3 sesiones por semana</li>
+                                <li>Trabaja todos los grupos musculares</li>
+                                <li>Usa pesas, bandas o peso corporal</li>
+                                <li>Descansa entre sesiones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">🧘‍♀️</span>
+                        <h3>Flexibilidad y Balance</h3>
+                        <p>Los ejercicios de flexibilidad y balance mejoran la movilidad, previenen lesiones y reducen el estrés.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Practica yoga o pilates</li>
+                                <li>Estira después del ejercicio</li>
+                                <li>Incluye ejercicios de equilibrio</li>
+                                <li>Mantén cada estiramiento 30 segundos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mental" class="section">
+                <div class="hero-section hero-section-alt-style">
+                    <h2>Bienestar Mental</h2>
+                    <p> La salud mental es tan importante como la salud física. Cuidar de nuestras emociones, pensamientos y relaciones nos permite llevar una vida equilibrada.
+                    </p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <span class="card-icon">🧘</span>
+                        <h3>Gestión del Estrés</h3>
+                        <p>El estrés crónico puede afectar negativamente tu salud física y mental. Aprender a manejarlo es esencial para el bienestar.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Practica técnicas de relajación</li>
+                                <li>Medita 10-15 minutos diarios</li>
+                                <li>Haz ejercicios de respiración profunda</li>
+                                <li>Identifica y evita factores estresantes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">👥</span>
+                        <h3>Conexiones Sociales</h3>
+                        <p>Las relaciones sociales saludables son fundamentales para el bienestar emocional y pueden incluso impactar tu salud física.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Mantén contacto con familiares y amigos</li>
+                                <li>Participa en actividades comunitarias</li>
+                                <li>Busca apoyo cuando lo necesites</li>
+                                <li>Cultiva relaciones positivas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">🎯</span>
+                        <h3>Propósito y Metas</h3>
+                        <p>Tener objetivos claros y un sentido de propósito en la vida contribuye significativamente al bienestar mental y la satisfacción personal.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Establece metas realistas y alcanzables</li>
+                                <li>Encuentra actividades que te apasionen</li>
+                                <li>Celebra tus logros pequeños</li>
+                                <li>Mantén una actitud positiva</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="prevencion" class="section">
+                <div class="hero-section hero-section-alt-style">
+                    <h2>Prevención y Cuidado</h2>
+                    <p>  La prevención es clave para evitar enfermedades y mantener una buena calidad de vida. Adoptar hábitos saludables hoy protege tu bienestar en el futuro.</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <span class="card-icon">🚭</span>
+                        <h3>Evitar Hábitos Nocivos</h3>
+                        <p>Eliminar o reducir hábitos dañinos es una de las mejores inversiones que puedes hacer en tu salud futura.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>No fumar ni usar productos de tabaco</li>
+                                <li>Limitar el consumo de alcohol</li>
+                                <li>Evitar drogas recreativas</li>
+                                <li>Reducir el consumo de alimentos procesados</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">🧴</span>
+                        <h3>Higiene Personal</h3>
+                        <p>Mantener una buena higiene personal previene infecciones y enfermedades, además de mejorar tu autoestima y bienestar general.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Lávate las manos frecuentemente</li>
+                                <li>Mantén una higiene bucal adecuada</li>
+                                <li>Ducha regularmente</li>
+                                <li>Cambia la ropa de cama semanalmente</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-icon">☀️</span>
+                        <h3>Protección Solar</h3>
+                        <p>La protección adecuada contra los rayos UV previene el cáncer de piel, el envejecimiento prematuro y otros daños cutáneos.</p>
+                        <div class="card-tips">
+                            <ul>
+                                <li>Usa protector solar FPS 30+ diariamente</li>
+                                <li>Busca sombra entre 10 AM y 4 PM</li>
+                                <li>Usa ropa protectora y sombreros</li>
+                                <li>Evita las camas solares</li>
+                                <li>Evita las camas solares</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+
+            // `event.target` se refiere al botón que fue clickeado
+            if (event.target && event.target.closest('.tab-btn')) {
+                event.target.closest('.tab-btn').classList.add('active');
+            }
+        }
+
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

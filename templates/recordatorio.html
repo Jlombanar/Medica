@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recordatorio de Medicación</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  
+  <style>
+    /* Estilos base (Desktop) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Inter', 'Segoe UI', sans-serif; 
+      background: #e9f0f9;
+      min-height: 100vh; 
+      padding: 30px 20px;
+    }
+
+    .container { 
+      max-width: 1400px; 
+      margin: auto; 
+    }
+
+    .header { text-align: center; margin-bottom: 40px; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 15px;
+      background: #ffffff; padding: 15px 35px; border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+    }
+    .logo i { font-size: 35px; color: #1976D2; }
+    .logo h1 { font-size: 28px; color: #1976D2; font-weight: 700; }
+
+    .card { 
+      background: #ffffff; backdrop-filter: blur(10px);
+      border-radius: 18px; padding: 30px; margin-bottom: 30px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+    }
+
+    .card h2 {
+      color: #2d3748; font-size: 24px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+      padding-bottom: 15px; border-bottom: 2px solid #e2e8f0;
+    }
+    .card h2 i { color: #1976D2; font-size: 26px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px; margin-bottom: 25px;
+    }
+
+    .form-group { position: relative; }
+    label { font-weight: 600; color: #4a5568; display: block; margin-bottom: 8px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    label i { color: #1976D2; font-size: 16px; }
+
+    input { 
+      width: 100%; padding: 14px 16px; border: 1px solid #cbd5e0;
+      border-radius: 10px; font-size: 15px; background: #f7fafc;
+    }
+    input:focus { outline: none; border-color: #1976D2; box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1); background: white; }
+
+    .btn { 
+      background: linear-gradient(135deg, #1976D2, #0D47A1); color: #fff; border: none; 
+      padding: 15px 30px; border-radius: 10px; cursor: pointer; width: 100%;
+      font-size: 16px; font-weight: 600; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(25, 118, 210, 0.4); }
+    .btn:active { transform: translateY(-1px); }
+
+    #msg { display: none; } 
+
+    /* Estilos de Tabla para Desktop */
+    .table-container { overflow-x: auto; border-radius: 10px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+    thead { background: #1976D2; }
+    th { color: #fff; padding: 14px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    th:first-child { border-top-left-radius: 10px; }
+    th:last-child { border-top-right-radius: 10px; }
+
+    tbody tr { transition: all 0.2s ease; background: white; }
+    tbody tr:hover { background: #e6f0ff; }
+    td { padding: 14px; border-bottom: 1px solid #e2e8f0; color: #4a5568; font-size: 14px; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .btn-eliminar { 
+      background: linear-gradient(135deg, #E53935, #C62828); padding: 7px 14px;
+      border-radius: 6px; border: none; color: white; cursor: pointer;
+      font-weight: 600; display: inline-flex; align-items: center; gap: 5px; font-size: 13px;
+      width: auto; /* IMPORTANTE: Aseguramos tamaño natural en desktop */
+    }
+    .btn-eliminar:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4); }
+
+    .status-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 15px;
+      font-size: 12px; font-weight: 600; background: #E3F2FD; color: #1976D2;
+      border: 1px solid #BBDEFB;
+    }
+
+    /* ======================================================= */
+    /* RESPONSIVIDAD AVANZADA PARA LA TABLA (Móviles) */
+    /* ======================================================= */
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .card { padding: 20px; }
+      
+      /* Ocultar las cabeceras de la tabla en móvil */
+      #medsTable thead {
+        display: none; 
+      }
+
+      #medsTable, #medsTable tbody, #medsTable tr, #medsTable td {
+        display: block;
+        width: 100%; 
+      }
+
+      #medsTable tr {
+        /* Cada fila se convierte en una "Tarjeta" */
+        margin-bottom: 15px; 
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      }
+
+      #medsTable td {
+        /* Estilizar cada celda de la "Tarjeta" */
+        border: none;
+        position: relative;
+        padding: 10px 15px 5px 15px; 
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-size: 15px; 
+      }
+      
+      /* Celda de acciones para móviles */
+      #medsTable td:last-child {
+        border-bottom: none;
+        text-align: left; /* Alineamos el contenido de la celda a la izquierda */
+        padding: 15px; 
+      }
+
+      /* Botón de eliminar para móvil (COMPACTO Y A LA IZQUIERDA) */
+      .btn-eliminar {
+        width: auto; /* CORRECCIÓN: Volvemos al tamaño natural */
+        justify-content: flex-start; /* Alineamos el contenido a la izquierda dentro del botón */
+        padding: 10px 14px;
+        margin-top: 5px;
+        /* Hacemos que sea un bloque completo para que quede debajo de la etiqueta ACCIONES */
+        display: block; 
+      }
+
+      /* Añadir la etiqueta (cabecera) como contenido pseudo-elemento */
+      #medsTable td::before {
+        content: attr(data-label); 
+        display: block; /* Muestra el label encima del valor */
+        width: 100%; 
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 700;
+        color: #4a5568; 
+        margin-bottom: 3px;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-pills"></i>
+        <h1>Recordatorio de Medicación</h1>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <i class="fas fa-plus-circle"></i>
+        Agregar Medicamento
+      </h2>
+      <form id="medicationForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>
+              <i class="fas fa-capsules"></i>
+              Nombre del Medicamento
+            </label>
+            <input type="text" id="medName" required placeholder="Ej: Ibuprofeno">
+          </div>
+          <div class="form-group">
+            <label>
+              <i class="fas fa-prescription-bottle"></i>
+              Dosis
+            </label>
+            <input type="text" id="medDose" required placeholder="Ej: 400mg">
+          </div>
+          <div class="form-group">
+            <label>
+              <i class="fas fa-clock"></i>
+              Frecuencia (horas)
+            </label>
+            <input type="number" id="medFrequency" required min="1" placeholder="Ej: 8">
+          </div>
+          <div class="form-group">
+            <label>
+              <i class="fas fa-calendar-check"></i>
+              Fecha Inicio
+            </label>
+            <input type="date" id="medStart" required>
+          </div>
+          <div class="form-group">
+            <label>
+              <i class="fas fa-calendar-xmark"></i>
+              Fecha Fin
+            </label>
+            <input type="date" id="medEnd" required>
+          </div>
+          <div class="form-group">
+            <label>
+              <i class="fas fa-envelope"></i>
+              Correo para Notificaciones
+            </label>
+            <input type="email" id="medEmail" required placeholder="ejemplo@correo.com">
+          </div>
+        </div>
+        <button type="submit" class="btn">
+          <i class="fas fa-save"></i>
+          Guardar Medicamento
+        </button>
+      </form>
+      <p id="msg"></p> 
+    </div>
+
+    <div class="card">
+      <h2>
+        <i class="fas fa-list-ul"></i>
+        Historial de Medicamentos
+      </h2>
+      <div class="table-container">
+        <table id="medsTable">
+          <thead>
+            <tr>
+              <th><i class="fas fa-capsules"></i> Nombre</th>
+              <th><i class="fas fa-prescription-bottle"></i> Dosis</th>
+              <th><i class="fas fa-clock"></i> Frecuencia (h)</th>
+              <th><i class="fas fa-envelope"></i> Correo</th>
+              <th><i class="fas fa-calendar-check"></i> Inicio</th>
+              <th><i class="fas fa-calendar-xmark"></i> Fin</th>
+              <th><i class="fas fa-cog"></i> Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
+    // Función para formatear la fecha (solución a las fechas largas GMT)
+    function formatearFecha(fechaString) {
+        if (!fechaString) return 'N/A';
+        const fecha = new Date(fechaString);
+        // Opciones para un formato legible en español (ej: 30 sep 2025)
+        const opciones = { day: 'numeric', month: 'short', year: 'numeric' };
+        return fecha.toLocaleDateString('es-ES', opciones); 
+    }
+
+    // Cargar medicamentos
+    async function cargarMedicamentos() {
+      try {
+          const res = await fetch("/obtener_medicamentos");
+          if (!res.ok) throw new Error("Error al cargar medicamentos");
+          const meds = await res.json();
+          const tbody = document.querySelector("#medsTable tbody");
+          tbody.innerHTML = "";
+          
+          // Etiquetas para usar en el Card View (Responsivo)
+          const labels = ["Nombre del Medicamento", "Dosis", "Frecuencia (horas)", "Correo", "Fecha Inicio", "Fecha Fin", "Acciones"];
+          
+          // Datos de prueba si la petición falla (opcional)
+          if (meds.length === 0) {
+              const testData = [{id: 1, nombre: "Amoxicilina", dosis: "500mg", frecuencia: "8", correo: "correo@ejemplo.com", fecha_inicio: "2025-09-01", fecha_fin: "2025-09-07"}];
+              testData.forEach(m => {
+                  const tr = document.createElement("tr");
+                  tr.innerHTML = `
+                      <td data-label="${labels[0]}"><strong>${m.nombre}</strong></td>
+                      <td data-label="${labels[1]}">${m.dosis}</td>
+                      <td data-label="${labels[2]}"><span class="status-badge">${m.frecuencia}h</span></td>
+                      <td data-label="${labels[3]}">${m.correo}</td>
+                      <td data-label="${labels[4]}">${formatearFecha(m.fecha_inicio)}</td> 
+                      <td data-label="${labels[5]}">${formatearFecha(m.fecha_fin)}</td>
+                      <td data-label="${labels[6]}">
+                          <button class="btn-eliminar" onclick="eliminarMedicamento(${m.id})">
+                              <i class="fas fa-trash-alt"></i>
+                              Eliminar
+                          </button>
+                      </td>
+                  `;
+                  tbody.appendChild(tr);
+              });
+              return; 
+          }
+
+          meds.forEach(m => {
+            const fechaInicioFormateada = formatearFecha(m.fecha_inicio);
+            const fechaFinFormateada = formatearFecha(m.fecha_fin);
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td data-label="${labels[0]}"><strong>${m.nombre}</strong></td>
+              <td data-label="${labels[1]}">${m.dosis}</td>
+              <td data-label="${labels[2]}"><span class="status-badge">${m.frecuencia}h</span></td>
+              <td data-label="${labels[3]}">${m.correo}</td>
+              <td data-label="${labels[4]}">${fechaInicioFormateada}</td>
+              <td data-label="${labels[5]}">${fechaFinFormateada}</td>
+              <td data-label="${labels[6]}">
+                <button class="btn-eliminar" onclick="eliminarMedicamento(${m.id})">
+                  <i class="fas fa-trash-alt"></i>
+                  Eliminar
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+      } catch (error) {
+          console.error("No se pudieron cargar los medicamentos (error de fetch o JSON):", error);
+      }
+    }
+
+    // Guardar medicamento - USA SWEETALERT2 Y PREVENCIÓN DE DOBLE CLIC
+    document.getElementById("medicationForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const submitButton = e.submitter;
+      const originalHtml = submitButton.innerHTML;
+      
+      const med = {
+        nombre: document.getElementById("medName").value,
+        dosis: document.getElementById("medDose").value,
+        frecuencia: document.getElementById("medFrequency").value,
+        fecha_inicio: document.getElementById("medStart").value,
+        fecha_fin: document.getElementById("medEnd").value,
+        correo: document.getElementById("medEmail").value
+      };
+      
+      // 1. Deshabilitar el botón e indicar la carga (Previene el doble clic)
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+      try {
+          const res = await fetch("/registrar_medicamento", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(med)
+          });
+
+          const data = await res.json();
+          
+          if (data.success) {
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Medicamento Guardado!',
+                  text: data.message,
+                  showConfirmButton: false,
+                  timer: 1800 
+              });
+          } else {
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Error al Guardar',
+                  text: data.message || 'Ocurrió un error desconocido.',
+                  confirmButtonColor: '#d33'
+              });
+          }
+
+          cargarMedicamentos();
+          e.target.reset();
+
+      } catch (error) {
+          console.error("Error al registrar medicamento:", error);
+           Swal.fire({
+              icon: 'error',
+              title: 'Error de Conexión',
+              text: 'No se pudo conectar con el servidor para registrar el medicamento.',
+              confirmButtonColor: '#d33'
+          });
+      } finally {
+          // 2. Re-habilitar el botón y restaurar su HTML original
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalHtml;
+      }
+    });
+
+    // Eliminar medicamento - USA SWEETALERT2
+    async function eliminarMedicamento(id) {
+        // 1. CONFIRMACIÓN BONITA 
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir la eliminación de este medicamento!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1976D2', 
+            cancelButtonColor: '#C62828', 
+            confirmButtonText: '<i class="fas fa-check"></i> Sí, eliminar',
+            cancelButtonText: '<i class="fas fa-times"></i> Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                // 2. LÓGICA DE ELIMINACIÓN
+                const res = await fetch(`/eliminar_medicamento/${id}`, { method: "DELETE" });
+                const data = await res.json();
+                
+                // 3. ALERTA DE ÉXITO O ERROR 
+                if (data.success) {
+                    Swal.fire(
+                        '¡Eliminado!',
+                        'El medicamento ha sido eliminado exitosamente.',
+                        'success'
+                    );
+                } else {
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error al eliminar: ' + (data.error || 'Desconocido'),
+                        'error'
+                    );
+                }
+                cargarMedicamentos();
+            } catch (error) {
+                Swal.fire(
+                    'Error de Conexión',
+                    'No se pudo conectar con el servidor para eliminar.',
+                    'error'
+                );
+                console.error("Error al eliminar medicamento:", error);
+            }
+        }
+    }
+
+    setInterval(cargarMedicamentos, 60000);
+    cargarMedicamentos();
+  </script>
+</body>
+</html>

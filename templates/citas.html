@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita - Asistencia Médica J.A</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        /* --- Variables de Color y Estilos Base --- */
+        :root {
+            --primary-color: #054b88;
+            --primary-hover: #0056b3;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-dark: #343a40;
+            --text-light: #6c757d;
+            --card-bg: #ffffff;
+            --shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* --- Contenedor Principal --- */
+        .main-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .section-title-container {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        /* --- Formulario y Campos --- */
+        form {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+        
+        /* --- Estilo de Botón --- */
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="section-title-container">
+            <h3 class="section-title">Agendar Nueva Cita</h3>
+            <p class="section-subtitle">Programa una nueva cita con tu médico</p>
+        </div>
+
+        <form method="POST">
+            <label for="fecha">Fecha:</label>
+            <div class="input-group">
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+            
+            <label for="hora">Hora:</label>
+            <div class="input-group">
+                <select id="hora" name="hora" required>
+                    <option value="">Seleccione primero la fecha y el médico</option>
+                </select>
+            </div>
+            
+            <label for="especialidad">Especialidad:</label>
+            <div class="input-group">
+                <select id="especialidad" name="especialidad" required>
+                    <option value="">Seleccione una especialidad</option>
+                    {% for esp in especialidades %}
+                        <option value="{{ esp.id }}">{{ esp.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <label for="medico">Médico:</label>
+            <div class="input-group">
+                <select id="medico" name="medico_id" required>
+                    <option value="">Seleccione primero la especialidad</option>
+                </select>
+            </div>
+            
+            <label for="tipo_cita">Tipo de Cita:</label>
+            <div class="input-group">
+                <select id="tipo_cita" name="tipo_cita" required>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Virtual">Virtual</option>
+                </select>
+            </div>
+            
+            <label for="notas">Notas:</label>
+            <div class="input-group">
+                <textarea id="notas" name="notas" rows="4"></textarea>
+            </div>
+
+            <button type="submit">Agendar</button>
+        </form>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <script>
+                    Swal.fire({
+                        icon: "{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }}",
+                        title: "{{ 'Éxito' if category == 'success' else 'Error' if category == 'error' else 'Aviso' }}",
+                        text: "{{ message }}",
+                        confirmButtonColor: "#007bff"
+                    });
+                </script>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        const especialidadSelect = document.getElementById("especialidad");
+        const medicoSelect = document.getElementById("medico");
+        const fechaInput = document.getElementById("fecha");
+        const horaSelect = document.getElementById("hora");
+
+        // Función para cargar médicos según la especialidad
+        especialidadSelect.addEventListener("change", function() {
+            let espId = this.value;
+            medicoSelect.innerHTML = "<option>Cargando...</option>";
+            horaSelect.innerHTML = "<option value=''>Seleccione primero la fecha y el médico</option>"; // Resetear horas
+
+            if (!espId) {
+                medicoSelect.innerHTML = "<option value=''>Seleccione primero la especialidad</option>";
+                return;
+            }
+
+            fetch(`/get_medicos/${espId}`)
+                .then(res => res.json())
+                .then(data => {
+                    medicoSelect.innerHTML = "<option value=''>Seleccione un médico</option>";
+                    data.forEach(m => {
+                        medicoSelect.innerHTML += `<option value="${m.id}">${m.nombre}</option>`;
+                    });
+                })
+                .catch(err => {
+                    medicoSelect.innerHTML = "<option>Error al cargar</option>";
+                });
+        });
+
+        // Función para cargar horarios según fecha y médico
+        function cargarHorarios() {
+            let fecha = fechaInput.value;
+            let medicoId = medicoSelect.value;
+
+            if (!fecha || !medicoId) {
+                horaSelect.innerHTML = "<option value=''>Seleccione fecha y médico</option>";
+                return;
+            }
+
+            horaSelect.innerHTML = "<option>Cargando...</option>";
+
+            fetch(`/get_horarios/${medicoId}/${fecha}`)
+                .then(res => res.json())
+                .then(data => {
+                    horaSelect.innerHTML = "<option value=''>Seleccione una hora</option>";
+                    if (data.length === 0) {
+                        horaSelect.innerHTML = "<option value=''>No hay horarios disponibles</option>";
+                    } else {
+                        data.forEach(h => {
+                            horaSelect.innerHTML += `<option value="${h}">${h}</option>`;
+                        });
+                    }
+                })
+                .catch(err => {
+                    horaSelect.innerHTML = "<option>Error al cargar horarios</option>";
+                });
+        }
+
+        fechaInput.addEventListener("change", cargarHorarios);
+        medicoSelect.addEventListener("change", cargarHorarios);
+    </script>
+</body>
+</html>

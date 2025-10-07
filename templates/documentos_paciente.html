@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Documentos de Pacientes - Asistencia Médica J.A</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #054b88;
+      --primary-hover: #007bff;
+      --light-bg: #f8f9fa;
+      --text-dark: #343a40;
+      --text-light: #6c757d;
+      --card-bg: #ffffff;
+      --shadow: 0 8px 30px rgba(0,0,0,0.08);
+      --success-color: #28a745;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #007bff 100%);
+      color: white;
+      padding: 30px 40px;
+      box-shadow: var(--shadow);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      font-weight: 600;
+    }
+    .main-container {
+      max-width: 90%;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    /* 🔹 Caja de filtro */
+    .filter-box {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .filter-box h2 {
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      font-size: 1.2em;
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    input[type="text"], select {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      max-width: 220px;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: var(--primary-hover);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 25px;
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--light-bg);
+      padding-bottom: 10px;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.4em;
+      font-weight: 600;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .table-responsive { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      background: white;
+    }
+    table th {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #007bff 100%);
+      color: white;
+      padding: 15px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+    table td {
+      padding: 15px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+    table tr:hover { background-color: #f8f9ff; }
+
+    .document-name strong { font-weight: 600; color: var(--text-dark); }
+    .document-name small {
+      display: block;
+      color: var(--text-light);
+      font-size: 0.85em;
+      margin-left: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .btn-view { background: var(--primary-color); color: white; }
+    .btn-view:hover { background: var(--primary-hover); }
+    .btn-download { background: var(--success-color); color: white; margin-left: 6px; }
+    .btn-download:hover { background: #218838; }
+
+    .no-data {
+      text-align: center;
+      color: var(--text-light);
+      padding: 20px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 25px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #054b88, #007bff);
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-back:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(5,75,136,0.3);
+    }
+
+.alert {
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+    /* 🔹 Responsivo tipo tarjetas */
+    @media (max-width: 768px) {
+      table thead { display: none; }
+      table, table tbody, table tr, table td { display: block; width: 100%; }
+      table tr {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      }
+      table td {
+        text-align: left;
+        padding: 8px 12px 8px 140px;
+        position: relative;
+        border-bottom: 1px solid #eee;
+        word-wrap: break-word;
+      }
+      table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 12px;
+        top: 8px;
+        font-weight: bold;
+        color: var(--primary-color);
+        width: 120px;
+        white-space: nowrap;
+      }
+      table td:last-child { border-bottom: none; }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-file-medical"></i> Documentos de Pacientes</h1>
+  </header>
+
+<!-- 🔹 Mensajes flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="max-width:90%; margin:20px auto;">
+      {% for category, message in messages %}
+        <div class="alert {% if category == 'error' %}alert-error{% else %}alert-success{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+  <div class="main-container">
+    <!-- Formulario de búsqueda -->
+    <div class="filter-box">
+      <h2>🔎 Busca tu paciente</h2>
+      <form method="get" action="/documentos_paciente">
+        <select name="tipo_documento" required>
+          <option value="" disabled selected>Selecciona tipo</option>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="CE">Cédula de Extranjería</option>
+          <option value="PA">Pasaporte</option>
+        </select>
+        <input type="text" name="documento" placeholder="Número de documento del paciente" required>
+        <button type="submit"><i class="fas fa-search"></i> Buscar</button>
+      </form>
+    </div>
+
+    {% if paciente %}
+
+    <!-- Botón para subir documento independiente -->
+  <div style="text-align: right; margin-bottom: 15px;">
+    <a href="{{ url_for('subir_documento_medico') }}?usuario_id={{ paciente.id }}" class="btn btn-view" style="padding:10px 16px;">
+      <i class="fas fa-cloud-upload-alt"></i> Subir Documento
+    </a>
+  </div>
+      <!-- Documentos ligados a citas -->
+      <div class="section">
+        <div class="section-header">
+          <h2>
+            <i class="fas fa-notes-medical"></i> Documentos ligados a citas de {{ paciente.nombre }}
+            ({{ paciente.tipo_documento }} {{ paciente.documento }})
+          </h2>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Subido por</th>
+                <th>Fecha/Hora</th>
+                <th>Cita</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if documentos_citas %}
+                {% for doc in documentos_citas %}
+                <tr>
+                  <td data-label="Documento">
+                    <div class="document-name">
+                      <strong>
+                        <i class="fas fa-file-medical" style="color:#007bff; margin-right:6px;"></i>
+                        {{ doc.nombre }}
+                      </strong>
+                      <small>{{ doc.tipo }}</small>
+                    </div>
+                  </td>
+                  <td data-label="Subido por">
+                    <i class="fas fa-user-md" style="color: var(--primary-color);"></i> {{ doc.subido_por }}
+                  </td>
+                  <td data-label="Fecha/Hora">
+                    <i class="fas fa-calendar" style="color: var(--success-color);"></i> {{ doc.fecha_subida.strftime('%Y-%m-%d') }}
+                    /
+                    <i class="fas fa-clock" style="color: var(--primary-color);"></i> {{ doc.fecha_subida.strftime('%H:%M:%S') }}
+                  </td>
+                  <td data-label="Cita">
+                    <i class="fas fa-calendar-check" style="color: var(--primary-color);"></i> {{ doc.fecha_cita }}
+                  </td>
+                  <td data-label="Acciones">
+                    <a href="{{ url_for('uploaded_file', filename=doc.archivo) }}" target="_blank" class="btn btn-view"><i class="fas fa-eye"></i> Ver</a>
+                    <a href="{{ url_for('uploaded_file', filename=doc.archivo) }}" download class="btn btn-download"><i class="fas fa-download"></i> Descargar</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr><td colspan="5" class="no-data"><i class="fas fa-folder-open"></i><br>No hay documentos ligados a citas.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Documentos independientes -->
+      <div class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-folder"></i> Documentos independientes</h2>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Subido por</th>
+                <th>Fecha/Hora</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if documentos_independientes %}
+                {% for doc in documentos_independientes %}
+                <tr>
+                  <td data-label="Documento">
+                    <div class="document-name">
+                      <strong>
+                        <i class="fas fa-file-medical" style="color:#007bff; margin-right:6px;"></i>
+                        {{ doc.nombre }}
+                      </strong>
+                      <small>{{ doc.tipo }}</small>
+                    </div>
+                  </td>
+                  <td data-label="Subido por">
+                    <i class="fas fa-user" style="color: var(--primary-color);"></i> {{ doc.subido_por }}
+                  </td>
+                  <td data-label="Fecha/Hora">
+                    <i class="fas fa-calendar" style="color: var(--success-color);"></i> {{ doc.fecha_subida.strftime('%Y-%m-%d') }}
+                    /
+                    <i class="fas fa-clock" style="color: var(--primary-color);"></i> {{ doc.fecha_subida.strftime('%H:%M:%S') }}
+                  </td>
+                  <td data-label="Acciones">
+                    <a href="{{ url_for('uploaded_file', filename=doc.archivo) }}" target="_blank" class="btn btn-view"><i class="fas fa-eye"></i> Ver</a>
+                    <a href="{{ url_for('uploaded_file', filename=doc.archivo) }}" download class="btn btn-download"><i class="fas fa-download"></i> Descargar</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr><td colspan="4" class="no-data"><i class="fas fa-folder-open"></i><br>No hay documentos independientes.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+    {% endif %}
+
+    
+    <!-- Botón volver -->
+    <a href="{{ url_for('panel_medico') }}" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al panel</a>
+  </div>
+</body>
+</html>

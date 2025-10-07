@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Médico</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        /* Contenedor principal del formulario */
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        /* Encabezado del formulario */
+        .form-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Contenido del formulario */
+        .form-content {
+            padding: 2rem;
+        }
+
+        /* Disposición de los campos en dos columnas */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Estilos de los inputs y selects */
+        .form-control, .form-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #1f2937;
+            background-color: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+            background-color: white;
+        }
+
+        .form-control[readonly] {
+            background-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+        
+        .form-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em 1.25em;
+            padding-right: 2.5rem;
+        }
+
+        /* Estilos de los botones */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-submit, .btn-back {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: white; /* Asegurar texto blanco para ambos */
+            border: none;
+            
+            /* Degradado de la imagen proporcionada */
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+
+        .btn-submit:hover, .btn-back:hover {
+            background: linear-gradient(135deg, #1e40af 0%, #3068cc 100%); /* Degradado un poco más oscuro al pasar el ratón */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra al hacer hover */
+        }
+
+        /* Ocupar el ancho completo en la cuadrícula */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <i class="fas fa-user-edit"></i>
+            Editar Médico
+        </div>
+        <div class="form-content">
+            <form method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tipo_documento"><i class="fas fa-id-card"></i> Tipo de Documento</label>
+                        <input type="text" id="tipo_documento" class="form-control" value="{{ medico.tipo_documento }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="documento"><i class="fas fa-hashtag"></i> Número de Documento</label>
+                        <input type="text" name="documento" id="documento" class="form-control" value="{{ medico.documento }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre"><i class="fas fa-user"></i> Nombre</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ medico.nombre }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo"><i class="fas fa-envelope"></i> Correo</label>
+                        <input type="email" name="correo" id="correo" class="form-control" value="{{ medico.correo }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono"><i class="fas fa-phone"></i> Teléfono</label>
+                        <input type="text" name="telefono" id="telefono" class="form-control" value="{{ medico.telefono }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion"><i class="fas fa-map-marker-alt"></i> Dirección</label>
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ medico.direccion }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudad"><i class="fas fa-city"></i> Ciudad</label>
+                        <input type="text" name="ciudad" id="ciudad" class="form-control" value="{{ medico.ciudad }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_nacimiento"><i class="fas fa-calendar-alt"></i> Fecha de nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ medico.fecha_nacimiento }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="genero"><i class="fas fa-venus-mars"></i> Género</label>
+                        <select name="genero" id="genero" class="form-select">
+                            <option value="">-- Seleccione --</option>
+                            <option value="Hombre" {% if medico.genero == "Hombre" %}selected{% endif %}>Hombre</option>
+                            <option value="Mujer" {% if medico.genero == "Mujer" %}selected{% endif %}>Mujer</option>
+                            <option value="Otro" {% if medico.genero == "Otro" %}selected{% endif %}>Otro</option>
+                            <option value="Prefiero no decir" {% if medico.genero == "Prefiero no decir" %}selected{% endif %}>Prefiero no decir</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="afiliado"><i class="fas fa-handshake"></i> Afiliado</label>
+                        <select name="afiliado" id="afiliado" class="form-select">
+                            <option value="si" {% if medico.afiliado == "si" %}selected{% endif %}>Sí</option>
+                            <option value="no" {% if medico.afiliado == "no" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="especialidad_id"><i class="fas fa-stethoscope"></i> Especialidad</label>
+                        <select name="especialidad_id" id="especialidad_id" class="form-select" required>
+                            {% for esp in especialidades %}
+                                <option value="{{ esp.id }}" {% if medico.especialidad_id == esp.id %}selected{% endif %}>
+                                    {{ esp.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-check full-width">
+                        <input class="form-check-input" type="checkbox" name="disponible" id="disponible" {% if medico.disponible %}checked{% endif %}>
+                        <label class="form-check-label" for="disponible">Disponible</label>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <a href="{{ url_for('gestion_medicos') }}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

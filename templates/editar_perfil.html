@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        /* --- Variables de Color y Estilos Base --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-dark: #343a40;
+            --text-light: #6c757d;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden; 
+        }
+ 
+        /* --- Contenedor Principal --- */
+        .container {
+            width: 100%;
+            max-width: 800px; 
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 35px; 
+            color: var(--text-dark);
+        }
+        
+        .profile-header i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        /* --- Cuadrícula del Formulario --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px 30px; 
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box; 
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        small {
+            color: var(--text-light);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* --- Grupo de Botones --- */
+        .button-group {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center; 
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px; 
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: var(--light-bg);
+            border-color: var(--secondary-color);
+        }
+        
+ @media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px; 
+    }
+    
+    .btn {
+        width: 100%; 
+        box-sizing: border-box; 
+    }
+
+    .container {
+        padding: 25px;
+    }
+ }
+
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <h2><i class="fas fa-user-edit"></i> Editar Perfil</h2>
+        </div>
+
+        <form method="POST" id="editarPerfilForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo:</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="nombre" name="nombre" value="{{ usuario.nombre }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="documento">Documento:</label>
+                     <div class="input-group">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="documento" name="documento" value="{{ usuario.documento }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                     <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="telefono" name="telefono" value="{{ usuario.telefono }}" pattern="[0-9]{10}" required>
+                    </div>
+                    <small>Debe tener 10 dígitos.</small>
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección:</label>
+                     <div class="input-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="direccion" name="direccion" value="{{ usuario.direccion }}" required>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="ciudad">Ciudad:</label>
+                     <div class="input-group">
+                        <i class="fas fa-city"></i>
+                        <input type="text" id="ciudad" name="ciudad" value="{{ usuario.ciudad }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo:</label>
+                     <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="correo" name="correo" value="{{ usuario.correo }}" required>
+                    </div>
+                    <small>Ej: nombre@dominio.com</small>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <a href="{{ url_for('perfil') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <script>
+            Swal.fire({
+              icon: "{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }}",
+              title: "{{ 'Éxito' if category == 'success' else 'Error' if category == 'error' else 'Información' }}",
+              text: "{{ message }}",
+              confirmButtonColor: "#007bff"
+            });
+          </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

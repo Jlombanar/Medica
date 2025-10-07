@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información sobre RCP y Primeros Auxilios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <style>
+        :root {
+            --primary-blue: #054b88;
+            --accent-gold: #dfc974;
+            --text-color: #212529;
+            --light-bg: #f8f9fa;
+            --card-bg: #fff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            border-bottom: 13px solid #dfc974;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .logo-header {
+            height: 80px;
+            margin-right: 15px;
+        }
+
+        .encabezado-contenido {
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('{{ url_for("static", filename="tttt.png") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+
+        .titulo-header {
+            font-size: 32px;
+            margin: 0;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            margin: 6px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links-wrapper {
+            display: flex;
+            gap: 40px;
+        }
+         nav a {
+            color: #054b88;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 7px 8px;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+
+       @media (max-width: 768px) {
+            nav {
+                justify-content: flex-start;
+            }
+
+            .menu-toggle {
+                display: block;
+                font-size: 30px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                color: #054b88;
+            }
+
+            .nav-links-wrapper {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: #ffffff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 10px 0;
+                margin-top: 10px;
+            }
+
+            .nav-links-wrapper.active {
+                display: flex;
+            }
+
+            .nav-links-wrapper a {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .nav-links-wrapper a:last-child {
+                border-bottom: none;
+            }
+        }
+        
+        /* New CSS for Bootstrap-like components */
+        .main-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: #fff;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+
+        .col-md-3 {
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding: 0 15px;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+        
+        /* NEW: This media query specifically targets small screens to make the cards stack */
+        @media (max-width: 767px) {
+            .col-md-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 20px; /* Add some space between stacked cards */
+            }
+        }
+
+
+        .carousel {
+            position: relative;
+        }
+
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-item {
+            display: none;
+        }
+
+        .carousel-item.active {
+            display: block;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .carousel-control-prev {
+            left: 15px;
+        }
+
+        .carousel-control-next {
+            right: 15px;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M4.646 1.646a.5.5 0 0 0 0 .708L10.293 8l-5.647 5.646a.5.5 0 0 0 .708.708l6-6a.5.5 0 0 0 0-.708l-6-6a.5.5 0 0 0-.708 0z'/%3e%3c/svg%3e");
+        }
+    
+        .circle-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-blue);
+        }
+
+        .section-title-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px auto 20px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 26px;
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-separator {
+            height: 4px;
+            width: 220px;
+            background-color: var(--accent-gold);
+            border: none;
+            margin: 0;
+        }
+
+        .card {
+            background: #fff;
+            height: 250px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin: 10px;
+            min-height: 220px;
+            border: 2px solid var(--accent-gold);
+            
+            /* Estilos para la onda */
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 60px; /* Para hacer espacio a la onda */
+        }
+        
+        /* Estilos de la onda */
+        .card-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45px;
+            z-index: 1;
+        }
+        
+        .card-wave .wave-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .wave-layer.wave1 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="%234a90e2" fill-opacity="1" d="M0,192L48,165.3C96,139,192,85,288,85.3C384,85,480,139,576,170.7C672,203,768,213,864,186.7C960,160,1056,96,1152,64C1248,32,1344,32,1392,32L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat center/cover;
+            opacity: 0.8;
+            transform: translateY(2px);
+        }
+
+        .wave-layer.wave2 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="%23dfc974" fill-opacity="1" d="M0,192L48,186.7C96,181,192,171,288,144C384,117,480,75,576,64C672,53,768,75,864,101.3C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat center/cover;
+            opacity: 0.6;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-blue);
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 3px solid var(--accent-gold);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+            color: var(--primary-blue);
+        }
+
+        .info-card .card-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 3px solid var(--primary-blue);
+        }
+        /* Icon styling for new sections */
+        .info-card .card-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            width: 100px; /* Adjust size as needed */
+            text-align: center;
+            margin-right: 20px;
+        }
+
+        /* New class for blue text to replace bold */
+        .text-blue {
+            color: var(--primary-blue);
+            font-weight: 600; /* Keeping font weight for emphasis */
+        }
+
+
+        .accordion {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .accordion-header {
+            background: #f7f9fc;
+            cursor: pointer;
+            padding: 15px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: #eaf1f9;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 15px;
+            background: #fff;
+        }
+        
+        /* New CSS rules for the accordion content and paragraphs */
+        .accordion-item.active .accordion-content {
+            max-height: 250px;
+            /* Adjust padding for top and bottom spacing */
+            padding: 15px;
+        }
+
+        .accordion-content p {
+            /* Resetting default margins and adding custom ones */
+            margin-top: 0;
+            margin-bottom: 15px; 
+            padding: 0;
+        }
+        /* End of new rules */
+
+        .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .my-5 {
+            margin-top: 3rem !important;
+            margin-bottom: 3rem !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+
+        .mx-auto {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .d-block {
+            display: block !important;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+        }
+
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+
+        .fw-semibold {
+            font-weight: 600 !important;
+        }
+
+        /* Custom styles for Heimlich carousel images */
+        #carruselHeimlich .rounded-circle {
+            margin-top: 20px; /* Adjust this value to move the image down */
+        }
+
+        /* Custom style for the text box below Heimlich images */
+        .text-description-box {
+            background-color: #f7f9fc; /* Light background color */
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 15px auto 0; /* Center and add top margin */
+            max-width: 300px; /* Adjust width as needed */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* New CSS for the text container of Heimlich description */
+        .heimlich-description-container {
+            max-width: 800px; /* O el ancho que desees, por ejemplo 900px */
+            margin: 0 auto 20px;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary-blue);
+            background: #f8f9fa;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='zz.png') }}">
+<body>
+
+<header>
+    <div class="encabezado-contenido">
+        <div class="logo-wrapper">
+            <img src="{{ url_for('static', filename='logoo.png') }}" alt="Logo" class="logo-header">
+            <h1 class="titulo-header">Asistencia Médica J.A</h1>
+        </div>
+    </div>
+    <nav>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <div class="nav-links-wrapper" id="navMenu">
+            <a href="/">Asistencia Profesional</a>
+            <a href="{{ url_for('agendar_cita') }}">Agendar Citas</a>
+            <a href="/recordatorio">Recordatorio de Medicación</a>
+            <a href="{{ url_for('consejos_salud') }}">Consejos de Salud</a>
+            <a href="{{ url_for('rcp') }}">RCP</a>
+        </div>
+    </nav>
+</header>
+ 
+ <div class="main-container">
+    <div class="section-title-container" id="rcp-adultos">
+      <h2 class="section-title">Pasos para RCP en Adultos</h2>
+      <hr class="section-separator">
+    </div>
+
+    <div id="rcpCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">1</div>
+                        <h3>Verificar seguridad</h3>
+                        <p>Asegúrate de que el área sea segura para ti y la víctima.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">2</div>
+                        <h3>Comprobar respuesta</h3>
+                        <p>Toca suavemente a la persona y pregunta si se encuentra bien.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">3</div>
+                        <h3>Respiración</h3>
+                        <p>Si no respira, llama a emergencias e inicia RCP.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">4</div>
+                        <h3>Llamar a emergencias</h3>
+                        <p>Contacta inmediatamente al número local de emergencias.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">5</div>
+                        <h3>Iniciar compresiones</h3>
+                        <p>Coloca tus manos en el centro del pecho y realiza 30 compresiones.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">6</div>
+                        <h3>Ventilaciones</h3>
+                        <p>Da 2 ventilaciones boca a boca asegurando el sellado.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">7</div>
+                        <h3>Ciclo</h3>
+                        <p>Alterna 30 compresiones y 2 ventilaciones sin detenerte.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="step">8</div>
+                        <h3>Uso de DEA</h3>
+                        <p>Si hay un desfibrilador disponible, enciéndelo y sigue las instrucciones.</p>
+                    </div>
+                    <div class="card-wave">
+                        <div class="wave-layer wave2"></div>
+                        <div class="wave-layer wave1"></div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#rcpCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#rcpCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <div class="section-title-container" id="rcp-ninos">
+      <h2 class="section-title">RCP en Niños</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card d-flex align-items-center">
+      <img src="./../static/niño.png" alt="RCP en niños" class="circle-img me-3">
+      <div>
+        <h3>Pasos principales</h3>
+        <ul>
+          <li>Verifica la seguridad del entorno.</li>
+          <li>Estimula suavemente al niño.</li>
+          <li>Si no respira, da 5 ventilaciones de rescate.</li>
+          <li>Alterna 30 compresiones con 2 ventilaciones.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title-container" id="rcp-solo-manos">
+      <h2 class="section-title">¿Que es la RCP solo con Manos?</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card">
+      <img src="../static/26.png" alt="RCP solo con manos" class="card-image">
+      <div>
+        <p>Es una forma simplificada de la reanimación cardiopulmonar (RCP) en la que únicamente se realizan compresiones torácicas, sin aplicar respiración boca a boca.
+        Está enfocada principalmente en adultos que sufren un paro cardíaco repentino.</p></div>
+    </div>
+
+    <div class="section-title-container" id="preguntas-frecuentes">
+      <h2 class="section-title">Preguntas Frecuentes</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header">¿Cuándo debo iniciar RCP?</div>
+        <div class="accordion-content"><p>Debes iniciar RCP de inmediato cuando la persona:
+          <br><br>
+          <span class="text-blue">No responde</span>
+          <br>
+          No reacciona a estímulos (ni al hablarle, gritarle, ni al sacudirle suavemente).
+          <br><br>
+          <span class="text-blue">No respira o respira anormalmente</span>
+          <br>
+          No se observa movimiento del pecho.
+          <br>
+          O tiene respiración agónica (jadeos irregulares, muy débiles, que no son respiración normal).
+          <br><br>
+         
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">¿Qué pasa si me equivoco?</div>
+        <div class="accordion-content"><p>Es mejor intentar que no hacer nada, puedes salvar una vida.</p></div>
+      </div>
+      <div class="accordion-item" id="compresiones-toracicas">
+        <div class="accordion-header">¿Cómo realizar compresiones torácicas?</div>
+        <div class="accordion-content"><p>Para realizar compresiones torácicas de manera efectiva, sigue estos pasos:
+          <br><br>
+          <span class="text-blue">1. Posición de las manos:</span> Coloca el talón de una mano en el centro del pecho, en la mitad inferior del esternón. Coloca la otra mano encima y entrelaza los dedos, manteniéndolos levantados para evitar presionar las costillas.
+          <br><br>
+          <span class="text-blue">2. Posición del cuerpo:</span> Mantén tus brazos rectos, con los codos bloqueados, y posiciona tus hombros directamente sobre tus manos.
+          <br><br>
+          <span class="text-blue">3. Ritmo y profundidad:</span> Empuja fuerte y rápido, permitiendo que el pecho regrese a su posición normal entre cada compresión. El ritmo ideal es de 100 a 120 compresiones por minuto y la profundidad debe ser de al menos 5 cm (aproximadamente 2 pulgadas) en adultos.</p></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">¿Cuáles son los pasos básicos de RCP?</div>
+        <div class="accordion-content"><p>Los pasos básicos de la RCP, conocidos como la cadena de supervivencia, son:
+          <br><br>
+          <span class="text-blue">1. Llamar a emergencias:</span> Contacta de inmediato al servicio de emergencias.
+          <br><br>
+          <span class="text-blue">2. Compresiones torácicas:</span> Inicia compresiones torácicas de alta calidad (30 compresiones).
+          <br><br>
+          <span class="text-blue">3. Vía aérea y ventilación:</span> Abre la vía aérea y realiza 2 ventilaciones de rescate.
+          <br><br>
+          <span class="text-blue">4. Repetir:</span> Continúa con ciclos de 30 compresiones y 2 ventilaciones hasta que llegue la ayuda profesional o la persona recupere la conciencia.</p></div>
+      </div>
+    </div>
+
+    <div class="container my-5" id="maniobra-heimlich">
+      <div class="section-title-container">
+        <h2 class="section-title">Maniobra de Heimlich</h2>
+        <hr class="section-separator">
+      </div>
+      <div class="heimlich-description-container">
+        <p class="mb-0">
+          Abraza por detrás a la persona, coloca un puño cerrado sobre el abdomen y realiza compresiones rápidas hacia adentro y arriba.
+        </p>
+      </div>
+      <div id="carruselHeimlich" class="carousel slide text-center" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../static/mani.jpg" class="rounded-circle mx-auto d-block shadow-sm" alt="Paso 1" width="220" height="220">
+            <div class="text-description-box">
+              <p class="fw-semibold">Colócate detrás de la persona</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="../static/maniobra.png" class="rounded-circle mx-auto d-block shadow-sm" alt="Paso 2" width="220" height="220">
+            <div class="text-description-box">
+              <p class="fw-semibold">Coloca el puño sobre el abdomen</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="../static/11.jpg" class="rounded-circle mx-auto d-block shadow-sm" alt="Paso 3" width="220" height="220">
+            <div class="text-description-box">
+              <p class="fw-semibold">Realiza compresiones rápidas hacia adentro y arriba</p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carruselHeimlich" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carruselHeimlich" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-title-container">
+      <h2 class="section-title">¿Cuando Aplicarla?</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card"><p>Si la persona:
+      <br><br>
+      <span class="text-blue">No puede respirar.</span>
+      <br>
+      <span class="text-blue">No puede hablar ni emitir sonidos.</span>
+      <br>
+      <span class="text-blue">No puede toser de forma efectiva.</span>
+      <br>
+      <span class="text-blue">Se lleva las manos al cuello</span> (signo universal de atragantamiento).
+      <br><br>
+      ⚠️ Si puede toser o hablar, no se aplica la maniobra: se le anima a seguir tosiendo.</p></div>
+
+    <div class="section-title-container" id="quemaduras">
+      <h2 class="section-title">Quemaduras</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card"><p>Enfría la zona con agua corriente durante al menos 10 minutos. No uses hielo ni revientes ampollas.</p></div>
+    
+    <div class="section-title-container">
+      <h2 class="section-title">¿Que hacer?</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card"><p>
+      <span class="text-blue">Detén la causa del calor</span>
+      <br>
+      Apaga llamas con una manta, agua o haciendo rodar a la persona.
+      <br>
+      Retira a la persona de la fuente de calor.
+      <br><br>
+      <span class="text-blue">Enfría la zona afectada</span>
+      <br>
+      Lava con agua corriente fresca (no helada) durante 10 a 20 minutos.
+      <br>
+      Esto reduce el dolor y limita la extensión del daño.
+      <br><br>
+      <span class="text-blue">Quita objetos ajustados</span>
+      <br>
+      Retira anillos, relojes, pulseras o ropa suelta antes de que aparezca la hinchazón.
+      <br><br>
+      <span class="text-blue">Protege la quemadura</span>
+      <br>
+      Cubre la zona con una gasa estéril o paño limpio.
+      <br>
+      Mantén la herida limpia y sin presión.
+      <br><br>
+      <span class="text-blue">Busca atención médica si:</span>
+      <br>
+      La quemadura es profunda o extensa.
+      <br>
+      Afecta cara, manos, pies, genitales o articulaciones.
+      <br>
+      Se trata de un niño o anciano.
+      <br>
+      La causa fue electricidad, químicos o explosiones.</p></div>
+
+    <div class="section-title-container">
+      <h2 class="section-title">Que no hacer:</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card"><p>
+      <span class="text-blue">No aplicar hielo</span> (puede dañar más la piel).
+      <br>
+      <span class="text-blue">No reventar ampollas</span> (protegen contra infecciones).
+      <br>
+      <span class="text-blue">No aplicar pasta dental, mantequilla, aceite</span> ni remedios caseros.
+      <br>
+      <span class="text-blue">No retirar ropa pegada a la piel</span> (cortar alrededor, nunca halar).</p></div>
+  
+    <div class="section-title-container" id="heridas">
+      <h2 class="section-title">Heridas</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card"><p>Presiona con una gasa limpia para detener el sangrado. Lava con agua y jabón y cubre con un vendaje estéril.</p></div>
+
+    <div class="section-title-container" id="desmayos">
+      <h2 class="section-title">Desmayos</h2>
+      <hr class="section-separator">
+    </div>
+    <div class="info-card"><p>Acuesta a la persona boca arriba, eleva sus piernas y afloja la ropa. Si no despierta rápido, llama a emergencias.</p></div>
+  
+    <div class="section-title-container" id="fracturas-esguinces">
+        <h2 class="section-title">Fracturas y Esguinces</h2>
+        <hr class="section-separator">
+    </div>
+    <div class="info-card">
+        <div class="card-icon"><i class="fas fa-bone"></i></div>
+        <div>
+            <p>
+                <span class="text-blue">Inmoviliza:</span> Evita mover la zona afectada para no causar más daño.
+                <br><br>
+                <span class="text-blue">Aplica hielo:</span> Usa una compresa fría o hielo envuelto en un paño en la zona.
+                <br><br>
+                <span class="text-blue">Eleva la extremidad:</span> Si es posible, eleva la zona lesionada por encima del nivel del corazón para reducir la hinchazón.
+            </p>
+        </div>
+    </div>
+
+    <div class="section-title-container" id="ataque-cardiaco">
+        <h2 class="section-title">Ataque Cardíaco y ACV</h2>
+        <hr class="section-separator">
+    </div>
+    <div class="info-card">
+        <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
+        <div>
+            <p>
+                <span class="text-blue">Llama a emergencias de inmediato.</span> Cada minuto cuenta en estas situaciones.
+                <br><br>
+                <span class="text-blue">Ataque Cardíaco:</span> Dolor o presión en el pecho, que puede irradiarse al brazo, mandíbula o espalda.
+                <br><br>
+                <span class="text-blue">ACV (Accidente Cerebrovascular):</span> Puedes usar el acrónimo <span class="text-blue">F.A.S.T.</span> para identificar los síntomas:
+                <br>
+                - **F** (Face - Cara): La cara se cae de un lado.
+                <br>
+                - **A** (Arms - Brazos): Un brazo está débil.
+                <br>
+                - **S** (Speech - Habla): Dificultad para hablar o entender.
+                <br>
+                - **T** (Time - Tiempo): Llama a emergencias de inmediato.
+            </p>
+        </div>
+    </div>
+    
+  </div>
+
+
+  <script>
+    // JavaScript for carousel functionality
+    document.addEventListener('DOMContentLoaded', () => {
+        const carousels = document.querySelectorAll('.carousel');
+        carousels.forEach(carousel => {
+            const inner = carousel.querySelector('.carousel-inner');
+            const items = inner.querySelectorAll('.carousel-item');
+            const prevBtn = carousel.querySelector('.carousel-control-prev');
+            const nextBtn = carousel.querySelector('.carousel-control-next');
+            let activeIndex = 0;
+
+            const updateCarousel = () => {
+                items.forEach((item, index) => {
+                    item.classList.remove('active');
+                    if (index === activeIndex) {
+                        item.classList.add('active');
+                    }
+                });
+            };
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    activeIndex = (activeIndex - 1 + items.length) % items.length;
+                    updateCarousel();
+                });
+                // Autoplay functionality: set an interval to advance slides
+                let autoSlideInterval = setInterval(() => {
+                    activeIndex = (activeIndex + 1) % items.length;
+                    updateCarousel();
+                }, 5000); // Change slide every 5 seconds
+
+                // Pause autoplay when hovering over the carousel
+                carousel.addEventListener('mouseenter', () => {
+                    clearInterval(autoSlideInterval);
+                });
+
+                // Resume autoplay when not hovering
+                carousel.addEventListener('mouseleave', () => {
+                    autoSlideInterval = setInterval(() => {
+                        activeIndex = (activeIndex + 1) % items.length;
+                        updateCarousel();
+                    }, 5000);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    activeIndex = (activeIndex + 1) % items.length;
+                    updateCarousel();
+                });
+            }
+        });
+    });
+
+    // JavaScript for accordion functionality
+    const items = document.querySelectorAll('.accordion-item');
+    items.forEach(item => {
+        item.querySelector('.accordion-header').addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+
+  
+    function toggleMenu() {
+        const navMenu = document.getElementById('navMenu');
+        navMenu.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
