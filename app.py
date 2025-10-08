@@ -1495,24 +1495,8 @@ def registrar_medicamento():
         # Cerrar conexión
         connection.close()
 
-        # 🔹 Devuelve una respuesta JSON válida
-        return jsonify({
-            "success": True,
-            "message": "Medicamento registrado correctamente",
-            "data": data
-        }), 200
-
-    except Exception as e:
-        # Si ocurre un error, devuelve JSON también (no HTML)
-        print("❌ Error al registrar medicamento:", e)
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        }), 500
-
-
-    # Enviar primer recordatorio inmediatamente
-    mensaje_recordatorio = f"""
+        # Crear el mensaje del recordatorio
+        mensaje_recordatorio = f"""
 🔔 MediAlert - Recordatorio de Medicación
 
 Hola {data.get('nombre_usuario', 'Usuario')} 👋
@@ -1526,9 +1510,26 @@ Es hora de tomar tu medicamento:
 ¡No olvides tomarlo a tiempo!
 Equipo MediAlert 💙
 """
-    enviar_recordatorio(data["correo"], f"🔔 MediAlert - Recordatorio de Medicación: {data['nombre']}", mensaje_recordatorio)
 
-    return jsonify({"success": True, "message": "Medicamento registrado y primer recordatorio enviado"})
+        # Enviar el recordatorio por correo
+        enviar_recordatorio(
+            data["correo"],
+            f"🔔 MediAlert - Recordatorio de Medicación: {data['nombre']}",
+            mensaje_recordatorio
+        )
+
+        # Devolver respuesta final
+        return jsonify({
+            "success": True,
+            "message": "Medicamento registrado y primer recordatorio enviado"
+        }), 200
+
+    except Exception as e:
+        print("❌ Error al registrar medicamento:", e)
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 
 
