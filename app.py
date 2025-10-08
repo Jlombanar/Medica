@@ -1464,20 +1464,16 @@ def recordatorio():
     user_email = session.get("user_email")
     return render_template("recordatorio.html", user_name=user_name, user_email=user_email)
 
-
-
-
 @app.route("/registrar_medicamento", methods=["POST"])
 def registrar_medicamento():
     try:
-        # Leer los datos enviados por el frontend (React, etc.)
         data = request.get_json(force=True)
-        user_id = session.get("usuario_id", 1)  # Por ahora un ID fijo
+        user_id = session.get("usuario_id", 1)
         now = datetime.now()
 
-        # Verificar que llegan todos los campos necesarios
-        campos_requeridos = ["nombre", "dosis", "frecuencia", "fecha_inicio", "fecha_fin", "correo"]
-        for campo in campos_requeridos:
+        # Validar campos requeridos
+        requeridos = ["nombre", "dosis", "frecuencia", "fecha_inicio", "fecha_fin", "correo"]
+        for campo in requeridos:
             if campo not in data or not data[campo]:
                 return jsonify({
                     "success": False,
@@ -1504,7 +1500,7 @@ def registrar_medicamento():
             connection.commit()
         connection.close()
 
-        # Crear el mensaje del recordatorio
+        # Crear mensaje de recordatorio
         mensaje_recordatorio = f"""
 🔔 MediAlert - Recordatorio de Medicación
 
@@ -1520,25 +1516,24 @@ Es hora de tomar tu medicamento:
 Equipo MediAlert 💙
 """
 
-        # Enviar el correo con control de errores
+        # Intentar enviar el correo, sin romper el flujo si falla
         try:
             enviar_recordatorio(
                 data["correo"],
-                f"🔔 MediAlert - Recordatorio de Medicación: {data['nombre']}",
+                f"🔔 MediAlert - Recordatorio: {data['nombre']}",
                 mensaje_recordatorio
             )
             correo_enviado = True
-        except Exception as mail_error:
-            print("⚠️ Error al enviar el correo:", mail_error)
+        except Exception as mail_err:
+            print("⚠️ Error al enviar correo:", mail_err)
             correo_enviado = False
 
-        # Devolver la respuesta JSON al frontend
         return jsonify({
             "success": True,
             "message": (
-                "Medicamento registrado correctamente y recordatorio enviado."
+                "Medicamento registrado y correo enviado correctamente."
                 if correo_enviado else
-                "Medicamento registrado, pero no se pudo enviar el correo."
+                "Medicamento registrado, pero el correo no pudo enviarse."
             ),
             "data": data
         }), 200
@@ -1549,6 +1544,11 @@ Equipo MediAlert 💙
             "success": False,
             "error": str(e)
         }), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
+
 
 
 
